@@ -43,7 +43,7 @@ class UsersController extends Controller
             'message' => 'USER_NOT_FOUND',    
             ], 404);
         }
-        $user = User::where('user_id', $id)->get();
+        $user = User::with('stacks')->where('user_id', $id)->first();
         return response()->json([
             'message' => 'testingstuff',
             'data' => $user
@@ -68,7 +68,6 @@ class UsersController extends Controller
             'message' => 'UNAUTHORIZED',    
             ], 500);
         }
-
         $this->validate($request, [
             'first_name' => ['string', 'min:1', 'max:255'],
             'last_name' => ['string', 'min:1', 'max:255'],

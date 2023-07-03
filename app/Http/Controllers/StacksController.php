@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use App\Models\Stack;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 class StacksController extends Controller
 {
     /**
@@ -29,6 +29,21 @@ class StacksController extends Controller
     public function store(Request $request)
     {
         //
+        $validated_data = $request->validate([
+            'name' => 'required|min:1|max:255'
+        ]);
+        $stack = Stack::create([
+            'name' => $validated_data["name"],
+            'user_id' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'message' => 'Stack created successfully',
+            'stack' => $stack  
+        ]);
+
+
+
     }
 
     /**
@@ -36,7 +51,17 @@ class StacksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $stack = Stack::with('notecards')->findOrFail($id);
+        if ($stack["user_id"] != Auth::id()) {
+            return response()->json([
+            'message' => 'UNAUTHORIZED',    
+            ], 500);
+        }
+
+        return response()->json([
+            "stack" => $stack
+        ]);
+
     }
 
     /**
@@ -52,7 +77,25 @@ class StacksController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $stack = Stack::with('notecards')->findOrFail($id);
+        if ($stack["user_id"] != Auth::id()) {
+            return response()->json([
+            'message' => 'UNAUTHORIZED',    
+            ], 500);
+        }
+        $this->validate($request, [
+            "name" => ['string', 'min:1', 'max:255']
+        ]);
+        $fillable_attributes = ['name'];
+        foreach ($fillable_attributes as $attribute) {
+            if ($request->has($attribute)) {
+                $stack->{$attribute} = $request->input($attribute);
+            }
+        }
+        return response()-> json([
+            'message' => 'Stack updated successfully',
+            'stack' => $stack
+        ]);
     }
 
     /**
@@ -60,6 +103,17 @@ class StacksController extends Controller
      */
     public function destroy(string $id)
     {
+        $stack = Stack::with('notecards')->findOrFail($id);
+        if ($stack["user_id"] != Auth::id()) {
+            return response()->json([
+            'message' => 'UNAUTHORIZED',    
+            ], 500);
+        }
+        $stack->delete();
+        return response()->json([
+            'message' => "Stack deleted successfully",
+            "stack" => $stack,
+        ]);
         //
     }
 }

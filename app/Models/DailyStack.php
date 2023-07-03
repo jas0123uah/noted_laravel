@@ -7,5 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class DailyStack extends Model
 {
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    public function notecards(){
+        return $this->hasMany(Notecard::class);
+    }
+    public function stacks(){
+        return $this->hasMany(Stack::class);
+    }
     use HasFactory;
 }

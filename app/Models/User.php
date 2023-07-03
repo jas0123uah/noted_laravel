@@ -22,6 +22,16 @@ class User extends Authenticatable
         return 'user_id';
     }
 
+    public function notecards(){
+        return $this->hasMany(Notecard::class, 'user_id');
+    }
+    public function stacks(){
+        return $this->hasMany(Stack::class, 'user_id');
+    }
+    public function daily_stack() {
+        return $this->hasOne(DailyStack::class, 'user_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

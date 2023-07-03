@@ -44,9 +44,19 @@ class Users extends TestCase
         //I'm in the db
         $user_id = DB::table('users')->where('first_name', 'John')->value('user_id');
         $user = User::find($user_id);
-        $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"][0];
+
+        $response =  $this->actingAs($user)->post("/api/stacks/", [
+            "name" => "My first stack"
+
+        ])->json();
+       // dd($response);
+        $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
+        
+        //Create a stack
+
         //dd($user_get);
         // $user = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+        //dd($user_get["stacks"]);
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "John",
@@ -57,6 +67,16 @@ class Users extends TestCase
             "subscription_token" => $user_get["subscription_token"],
             "created_at" => $user_get["created_at"],
             "updated_at" => $user_get["updated_at"],
+            "stacks" => [
+                [
+                    "stack_id" => $user_get["stacks"][0]["stack_id"],
+                    "created_at" => $user_get["stacks"][0]["created_at"],
+                    "updated_at" => $user_get["stacks"][0]["updated_at"],
+                    "user_id" => $user_id,
+                    "name" => "My first stack"
+
+                ]
+            ]
 
         ], $user_get);
 
@@ -74,7 +94,7 @@ class Users extends TestCase
 
         //The user is updated
 
-        $user_get = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+        $user_get = $this->getJson("/api/users/{$user_id}")->json()["data"];
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "Johnny",
@@ -85,6 +105,16 @@ class Users extends TestCase
             "subscription_token" => $user_get["subscription_token"],
             "created_at" => $user_get["created_at"],
             "updated_at" => $user_get["updated_at"],
+            "stacks" => [
+                [
+                    "stack_id" => $user_get["stacks"][0]["stack_id"],
+                    "created_at" => $user_get["stacks"][0]["created_at"],
+                    "updated_at" => $user_get["stacks"][0]["updated_at"],
+                    "user_id" => $user_id,
+                    "name" => "My first stack"
+
+                ]
+            ]
 
         ], $user_get);
 
@@ -184,6 +214,17 @@ class Users extends TestCase
     }
     public function test_user_unauthorized(): void
     {
+        $response = $this->get('/api/users/10000000')->json();
+        $this->assertEquals([
+            "message" => "USER_NOT_FOUND"
+        ],
+        $response);
+
+        $response = $this->delete('/api/users/10000000')->json();
+        $this->assertEquals([
+            "message" => "UNAUTHORIZED"
+        ],
+        $response);
         //Register someone else as a user. (we do not have access to this person's account)
         $data = [
             'first_name' => 'Jane',
@@ -250,6 +291,7 @@ class Users extends TestCase
         //$myself = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
     }
     public function test_user_invalid_data() : void {
+        
         $data = [
             // 'first_name' => 'Jane',
             // 'last_name' => 'Smith',
@@ -328,6 +370,41 @@ class Users extends TestCase
             "last_name" => "The last name field must be at least 1 characters.",
             "email" => "The email field must be at least 1 characters.",
         ]);
+
+
+        //Try to update user's email to someone else's email
+        Auth::logout();
+        $data = [
+            'first_name' => 'Jane',
+            'last_name' => 'Smith',
+            'email' => 'janesmith@example.com',
+            'password' => 'myPassword',
+            'password_confirmation' => 'myPassword',
+        ];
+        $response = $this->post('/register', $data);
+
+        $updates = [
+            'first_name' => 'Jay',
+            'last_name' => 'Spencer',
+            'email' => 'janesmith@example.com',
+        ];
+
+        $response = $this->actingAs($user)->put("/api/users/{$user_id}/", $updates);
+       // dd(session()->get('errors')->get('email'));
+        $this->assertEquals(session()->get('errors')->get('email')[0], "The email has already been taken.");
+        $updates = [
+            'first_name' => Str::random(256),
+            'last_name' => Str::random(256),
+            'email' => "{$long_string}@example.com",
+        ];
+        $response = $this->actingAs($user)->put("/api/users/{$user_id}/", $updates);
+        $errors = session()->get('errors')->all();
+        $this->assertEquals($errors, [
+            "0" => "The first name field must not be greater than 255 characters.",
+            "1" => "The last name field must not be greater than 255 characters.",
+            "2" => "The email field must not be greater than 255 characters.",
+        ]);
+        
     
     }
 }

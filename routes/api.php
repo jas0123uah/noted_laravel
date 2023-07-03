@@ -4,6 +4,7 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StacksController;
+use App\Http\Controllers\NotecardsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,3 +25,4 @@ Route::get('/stacks', function(){
 return view('welcome');
 });
 Route::resource('users', UsersController::class);
+Route::resource('notecards', NotecardsController::class);

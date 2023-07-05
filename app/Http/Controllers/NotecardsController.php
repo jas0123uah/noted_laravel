@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 use App\Models\Notecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Response;
+
 class NotecardsController extends Controller
 {
     /**
@@ -40,10 +44,11 @@ class NotecardsController extends Controller
             'user_id' => Auth::id(),
             'repetition' => 0,
         ]);
+        //$notecard->save();
 
         return response()->json([
             'message' => 'Notecard created successfully',
-            'notecard' => $notecard  
+            'data' => $notecard  
         ]);
     }
 
@@ -53,6 +58,11 @@ class NotecardsController extends Controller
     public function show(string $id)
     {
         //
+        $notecard = Notecard::findOrFail($id);
+
+        return response()->json([
+            "data" => $notecard
+        ]);
     }
 
     /**
@@ -68,11 +78,43 @@ class NotecardsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-        $validated_data = $request->validate([
-            'front' => 'required',
-            'back' => 'required',
-            'stack_id' => 'required'
+        $notecard = Notecard::findOrFail($id);
+        //The user may be studying the notecard or simply updating its contents.
+        if ($request->has('quality')) {
+            //The user is studying
+            $request->validate([
+                'quality' => 'required|integer|min:0|max:5'
+            ]);
+            $quality = $request->input('quality');
+            // Update the repetition and interval values
+            $notecard->repetition++;
+
+            // Update the E-Factor based on the provided quality
+            $notecard->updateEFactor($quality);
+
+            // Restart repetitions or Calculate the next repetition
+            $quality < 3 ? $notecard->restartRepetitions() :$notecard->calculateNextRepetition();
+
+            
+        } else {
+            # code...
+            $validated_data = $request->validate([
+                'front' => 'required|min:1',
+                'back' => 'required|min:1',
+                'stack_id' => 'required|integer'
+            ]);
+            $fillable_attributes = ['front', 'back', 'stack_id'];
+            foreach ($fillable_attributes as $attribute) {
+                if ($request->has($attribute)) {
+                    $notecard->{$attribute} = $request->input($attribute);
+                }
+            }
+        }
+        // Save the updated notecard
+        $notecard -> save();
+        return response()->json([
+            "message" => "Notecard updated successfully",
+            "data" => $notecard
         ]);
     }
 
@@ -81,6 +123,11 @@ class NotecardsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $notecard = Notecard::findOrFail($id);
+        $notecard->delete();
+        return response()->json([
+            "message" => "Notecard deleted successfully",
+            "data" => $notecard
+        ]);
     }
 }

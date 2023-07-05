@@ -39,7 +39,7 @@ class StacksController extends Controller
 
         return response()->json([
             'message' => 'Stack created successfully',
-            'stack' => $stack  
+            'data' => $stack  
         ]);
 
 
@@ -52,14 +52,9 @@ class StacksController extends Controller
     public function show(string $id)
     {
         $stack = Stack::with('notecards')->findOrFail($id);
-        if ($stack["user_id"] != Auth::id()) {
-            return response()->json([
-            'message' => 'UNAUTHORIZED',    
-            ], 500);
-        }
 
         return response()->json([
-            "stack" => $stack
+            "data" => $stack
         ]);
 
     }
@@ -92,9 +87,10 @@ class StacksController extends Controller
                 $stack->{$attribute} = $request->input($attribute);
             }
         }
+        $stack->save();
         return response()-> json([
             'message' => 'Stack updated successfully',
-            'stack' => $stack
+            'data' => $stack
         ]);
     }
 
@@ -112,7 +108,7 @@ class StacksController extends Controller
         $stack->delete();
         return response()->json([
             'message' => "Stack deleted successfully",
-            "stack" => $stack,
+            "data" => $stack,
         ]);
         //
     }

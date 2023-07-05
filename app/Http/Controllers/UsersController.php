@@ -45,7 +45,6 @@ class UsersController extends Controller
         }
         $user = User::with('stacks')->where('user_id', $id)->first();
         return response()->json([
-            'message' => 'testingstuff',
             'data' => $user
         ]);
     }
@@ -102,7 +101,7 @@ class UsersController extends Controller
     
     return response()->json([
         'message' => 'User deleted successfully',
-        'user' => $user   
+        'data' => $user   
     ]);
 }
 }

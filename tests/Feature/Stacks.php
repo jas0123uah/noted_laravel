@@ -1,9 +1,13 @@
 <?php
 
 namespace Tests\Feature;
+use App\Models\Notecard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Tests\Helpers\TestHelper;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
@@ -22,36 +26,18 @@ class Stacks extends TestCase
     public function test_stack_lifecycle(): void
     {
         
-        $data = [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'johndoe@example.com',
-            'password' => 'myPassword',
-            'password_confirmation' => 'myPassword',
-        ];
-        //I can register
-        $response = $this->post('/register', $data);
-
-        $response->assertStatus(302);
-
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'johndoe@example.com',
-        ]);
-
-        //I'm in the db
-        $user_id = DB::table('users')->where('first_name', 'John')->value('user_id');
-        $user = User::find($user_id);
+        $user = TestHelper::createFakeUser("John", "Doe");
+        $user_id = $user["user_id"];
         $stack = [
             "name" => "Test stack",
         ];
         //I can create a stack
         $this->actingAs($user)->post('/api/stacks/', $stack);
         
+        //$user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
         $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
         //dd($user_get);
-        // $user = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+    
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "John",
@@ -84,83 +70,181 @@ class Stacks extends TestCase
         
         $stack_id = $user_get["stacks"][0]["stack_id"]; 
         $response = $this->actingAs($user)->put("/api/stacks/{$stack_id}", $updates)->json();
+
         $this->assertEquals([
-            "stack_id" => $response["stack"]["stack_id"],
-            "created_at" => $response["stack"]["created_at"],
-            "updated_at" => $response["stack"]["updated_at"],
+            "stack_id" => $response["data"]["stack_id"],
+            "created_at" => $response["data"]["created_at"],
+            "updated_at" => $response["data"]["updated_at"],
             "user_id" => $user_id,
-            "notecards" => $response["stack"]["notecards"],
+            "notecards" => $response["data"]["notecards"],
             "name" => 'Updated name'
-        ], $response["stack"]);
+        ], $response["data"]);
 
         //Add a notecard
         $notecard = [
             "front" => "The front of the notecard",
             "back" => "The back of the notecard",
-            "stack_id" => $response["stack"]["stack_id"],
+            "stack_id" => $response["data"]["stack_id"],
 
         ];
         $response = $this->actingAs($user)->post("/api/notecards/", $notecard)->json();
-    
+        
         //I can get the stack and it returns the notecards associated with it
         $response = $this->actingAs($user)->get("/api/stacks/{$stack_id}")->json();
-        //dd($response);
         $this->assertEquals([
-            "stack_id" => $response["stack"]["stack_id"],
-            "created_at" => $response["stack"]["created_at"],
-            "updated_at" => $response["stack"]["updated_at"],
+            "stack_id" => $response["data"]["stack_id"],
+            "created_at" => $response["data"]["created_at"],
+            "updated_at" => $response["data"]["updated_at"],
             "user_id" => $user_id,
-            "name" => "Test stack",
+            "name" => "Updated name",
             "notecards" => [
                 [
-                    "notecard_id" => $response["stack"]["notecards"][0]["notecard_id"],
+                    "notecard_id" => $response["data"]["notecards"][0]["notecard_id"],
                     "user_id" => $user_id,
-                    "stack_id" => $response["stack"]["stack_id"],
+                    "stack_id" => $response["data"]["stack_id"],
                     "front" => "The front of the notecard",
                     "back" => "The back of the notecard",
                     "e_factor" => 2.5,
                     "repetition" => 0,
-                    "created_at" => $response["stack"]["notecards"][0]["created_at"],
-                    "updated_at" => $response["stack"]["notecards"][0]["updated_at"],
+                    "created_at" => $response["data"]["notecards"][0]["created_at"],
+                    "updated_at" => $response["data"]["notecards"][0]["updated_at"],
                 ],
             ],
-        ], $response["stack"]);
-
-
-
-
-
-
+        ], $response["data"]);
 
         //I can delete a stack and the notecards with it are removed
         $response = $this->actingAs($user)->delete("/api/stacks/{$stack_id}")->json();
 
         $this->assertEquals([
-            "stack_id" => $response["stack"]["stack_id"],
-            "created_at" => $response["stack"]["created_at"],
-            "updated_at" => $response["stack"]["updated_at"],
+            "stack_id" => $response["data"]["stack_id"],
+            "created_at" => $response["data"]["created_at"],
+            "updated_at" => $response["data"]["updated_at"],
             "user_id" => $user_id,
-            "name" => "Test stack",
+            "name" => "Updated name",
             "notecards" => [
                 [
-                    "notecard_id" => $response["stack"]["notecards"][0]["notecard_id"],
+                    "notecard_id" => $response["data"]["notecards"][0]["notecard_id"],
                     "user_id" => $user_id,
-                    "stack_id" => $response["stack"]["stack_id"],
+                    "stack_id" => $response["data"]["stack_id"],
                     "front" => "The front of the notecard",
                     "back" => "The back of the notecard",
                     "e_factor" => 2.5,
                     "repetition" => 0,
-                    "created_at" => $response["stack"]["notecards"][0]["created_at"],
-                    "updated_at" => $response["stack"]["notecards"][0]["updated_at"],
+                    "created_at" => $response["data"]["notecards"][0]["created_at"],
+                    "updated_at" => $response["data"]["notecards"][0]["updated_at"],
                 ],
             ],
-        ], $response["stack"]);
+        ], $response["data"]);
 
         //The database no longer has the notecard associated with the stack
         $this->assertDatabaseMissing('notecards', [
-            "notecard_id" => $response["stack"]["notecards"][0]["notecard_id"]
+            "notecard_id" => $response["data"]["notecards"][0]["notecard_id"]
         ]);
+    }
+    public function test_stack_unauthenticated() : void {
+        $stack = [
+            "name" => "Test stack",
+        ];
+        $create_stack_res = $this->post("/api/stacks", $stack);
+        $get_stack_res = $this->get("/api/stacks/1");
+        $update_stack_res = $this->put("/api/stacks/1");
+        $delete_stack_res = $this->delete("/api/stacks/1");
+        $responses = [$create_stack_res, $get_stack_res, $update_stack_res, $delete_stack_res];
+        foreach ($responses as $response) {
+            $response->assertRedirect('/login');
+        }
+    }
+    public function test_stack_unauthorized() : void {
+        $user = TestHelper::createFakeUser("John", "Doe");
+
+        $user_id = DB::table('users')->where('first_name', 'John')->value('user_id');
+        $user = User::find($user_id);
+        $stack = [
+            "name" => "Test stack",
+        ];
+        //create a stack
+        $stack_id = $this->actingAs($user)->post('/api/stacks/', $stack)->json()["data"]["stack_id"];
+        Auth::logout();
+        
+        
+        //Create user for myself
+
+        $myself = TestHelper::createFakeUser("Jay", "Spencer");
 
 
+        $get_response = $this->actingAs($myself)->get("/api/stacks/{$stack_id}")->json();
+        $put_response = $this->actingAs($myself)->put("/api/stacks/{$stack_id}", [
+            "name" => "New name"
+        ])->json();
+        $delete_response = $this->actingAs($myself)->delete("/api/stacks/{$stack_id}")->json();
+        $responses = [$get_response, $put_response, $delete_response];
+        foreach ($responses as $response) {
+            $this->assertEquals([
+                "message" => "STACK_NOT_FOUND"
+            ], $response);
+        }
+    }
+
+    public function test_stacks_invalid_data() : void {
+        $user = TestHelper::createFakeUser("John", "Doe");
+        $response = $this->actingAs($user)->get("/api/stacks/10000000")->json();
+        $this->assertEquals([
+                "message" => "STACK_NOT_FOUND"
+        ], $response);
+
+        $response = $this->actingAs($user)->post("/api/stacks/");
+        $errors = session()->get('errors')->all();
+        $this->assertEquals([
+            "0" => "The name field is required."
+        ], $errors);
+
+        $response = $this->actingAs($user)->post("/api/stacks/", ["name" => ""]);
+        $errors = session()->get('errors')->all();
+        $this->assertEquals([
+            "0" => "The name field is required."
+        ], $errors);
+
+
+        $response = $this->actingAs($user)->post("/api/stacks/", [
+            "name" =>Str::random(256)
+        ]);
+        $errors = session()->get('errors')->all();
+        $this->assertEquals([
+            "0" => "The name field must not be greater than 255 characters."
+        ], $errors);
+
+        //Create a stack
+
+        $stack = [
+            "name" => "Test stack",
+        ];
+        //I can create a stack
+        $stack_id = $this->actingAs($user)->post('/api/stacks/', $stack)->json()["data"]["stack_id"];
+
+        $response = $this->actingAs($user)->put("/api/stacks/{$stack_id}", [
+            "name" => ""
+        ]);
+        $errors = session()->get('errors')->all();
+
+        $this->assertEquals([
+            "0" => "The name field must be a string.",
+            "1" => "The name field must be at least 1 characters."
+        ], $errors);
+
+
+        $response = $this->actingAs($user)->put("/api/stacks/{$stack_id}", [
+            "name" => Str::random(256)
+        ]);
+        $errors = session()->get('errors')->all();
+
+        $this->assertEquals([
+            "0" => "The name field must not be greater than 255 characters."
+        ], $errors);
+
+        $response = $this->actingAs($user)->delete("/api/stacks/10000000")->json();
+        $this->assertEquals([
+                "message" => "STACK_NOT_FOUND"
+        ], $response);
+        
     }
 }

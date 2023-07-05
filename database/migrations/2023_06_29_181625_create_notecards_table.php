@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('back')->nullable(false)->min(1);
             $table->float('e_factor')->nullable(false)->default(2.5);
             $table->integer('repetition')->nullable(false)->default(0);
+            $table->timestamp('next_repetition')->default(DB::raw('DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY)'));
             $table->timestamps();
         });
     }

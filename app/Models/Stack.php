@@ -26,8 +26,8 @@ class Stack extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function daily_stack() {
-        return $this->belongsTo(Dailystack::class, 'stack_id');
+    public function review_notecards() {
+        return $this->hasMany(Reviewnotecard::class, 'stack_id');
         
     }
 

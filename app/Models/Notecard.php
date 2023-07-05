@@ -24,8 +24,8 @@ class Notecard extends Model
     public function stack(){
         return $this->belongsTo(Stack::class);
     }
-    public function daily_stack(){
-        return $this->belongsTo(Dailystack::class);
+    public function review_notecard(){
+        return $this->belongsTo(Reviewnotecard::class);
     }
 
     public function calculateNextRepetition()
@@ -64,11 +64,11 @@ class Notecard extends Model
         WHERE 
             n.next_repetition <= NOW() 
             AND u.email_verified_at IS NOT NULL 
-            AND u.is_subscribed = TRUE
+            AND u.is_unsubscribed = FALSE
             AND u.user_id NOT IN (
-                SELECT ds.user_id
-                FROM daily_stacks ds
-                WHERE DATE(ds.created_at) = CURDATE()
+                SELECT rn.user_id
+                FROM review_notecards rn
+                WHERE DATE(rn.created_at) = CURDATE()
             );
     ");
     // return self::where('next_repetition', '<=', now())

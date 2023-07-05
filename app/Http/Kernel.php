@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'checkModelOwnership' => \App\Http\Middleware\CheckModelOwnership::class,
         'checkStackOwnership' => \App\Http\Middleware\CheckStackOwnership::class,
+        'checkRequestedReviewNotecards' => \App\Http\Middleware\CheckRequestedReviewNotecards::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,

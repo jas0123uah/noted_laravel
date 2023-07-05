@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Reviewnotecard;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Mail;
 use App\Mail\NotedMailable;
 use App\Models\Notecard;
+use Illuminate\Support\Facades\DB;
 class MailController extends Controller
 {
     //
@@ -44,8 +46,7 @@ class MailController extends Controller
 
     public function index()
 {
-    // Get the current date
-    $currentDate = now()->toDateString();
+
 
     // Retrieve the notecards for the daily stack
     $notecards = Notecard::getItemsForReview();
@@ -53,8 +54,8 @@ class MailController extends Controller
     // Group notecards by user
     $grouped_notecards = [];
     foreach ($notecards as $notecard) {
-        $user = $notecard->user;
-        $grouped_notecards[$user->id][] = $notecard;
+        $user_id = $notecard->user_id;
+        $grouped_notecards[$user_id][] = $notecard;
     }
 
     // Array to store error messages
@@ -62,21 +63,39 @@ class MailController extends Controller
 
     foreach ($grouped_notecards as $user_id => $notecards) {
         $example_notecard = $notecards[0];
+        $users_review_notecards =[];
         foreach ($notecards as $notecard) {
-            dd($notecard);
-            # code...
+            $review_nc_model = new Reviewnotecard();
+            $review_nc_model->stack_id = $notecard->stack_id;
+            $review_nc_model->notecard_id = $notecard->notecard_id;
+            $review_nc_model->user_id = $notecard->user_id;
+            array_push($users_review_notecards, $review_nc_model);
+            
+        }
+        //Use a transaction to ensure that ALL notecards needing to be reviewed for a given user are saved to the table
+        DB::beginTransaction();
+        try {
+            foreach ($users_review_notecards as $review_notecard) {
+                $review_notecard ->save();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
         }
 
         try {
-            // Send the daily stack email
-            //Mail::to($user->email)->send(new NotedMailable($data));
-
-            // Log success message
-            Log::info("Daily stack email sent to {$user->email}.");
+            // Send the daily stack email if appropriate
+            if(config('app.env') === 'testing'){
+                Log::info("Not sending daily stack email to {$example_notecard->email} in testing environment.");
+            }
+            else{
+                Log::info("Daily stack email sent to {$example_notecard->email}.");
+            }
 
         } catch (\Throwable $th) {
             // Log the error message
-            $errors[] = "Failed to email daily stack to {$user->email}. Error: {$th->getMessage()}";
+            $errors[] = "Failed to email daily stack to {$example_notecard->email}. Error: {$th->getMessage()}";
         }
     }
     

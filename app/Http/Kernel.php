@@ -43,6 +43,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'custom' => [
+            \App\Http\Middleware\CheckModelOwnership::class,
+            \App\Http\Middleware\CheckStackOwnership::class,
+        ],
+
     ];
 
     /**
@@ -58,6 +63,8 @@ class Kernel extends HttpKernel
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'checkModelOwnership' => \App\Http\Middleware\CheckModelOwnership::class,
+        'checkStackOwnership' => \App\Http\Middleware\CheckStackOwnership::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,

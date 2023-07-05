@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\Notecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Response;
 
 class NotecardsController extends Controller
 {
@@ -29,7 +26,6 @@ class NotecardsController extends Controller
             'user_id' => Auth::id(),
             'repetition' => 0,
         ]);
-        //$notecard->save();
 
         return response()->json([
             'message' => 'Notecard created successfully',
@@ -70,7 +66,7 @@ class NotecardsController extends Controller
             $notecard->updateEFactor($quality);
 
             // Restart repetitions or Calculate the next repetition
-            $quality < 3 ? $notecard->restartRepetitions() :$notecard->calculateNextRepetition();
+            $quality < 3 ? $notecard->restartRepetitions() : $notecard->calculateNextRepetition();
 
             
         } else {

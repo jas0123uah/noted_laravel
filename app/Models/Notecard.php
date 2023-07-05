@@ -42,7 +42,7 @@ class Notecard extends Model
     public function updateEFactor($quality)
     {
         $new_e_Factor = $this->e_factor + (0.1 - (5 - $quality) * (0.08 + (5 - $quality) * 0.02));
-        $this->e_factor = max(1.3, $new_e_Factor);
+        $this->e_factor = round(max(1.30, $new_e_Factor), 2);
     }
 
     // If the quality response was lower than 3, restart repetitions for the item from the beginning
@@ -50,7 +50,7 @@ class Notecard extends Model
     public function restartRepetitions()
     {
         $this->repetition = 0;
-        $this->next_repetition = now()->addDay();
+        $this->next_repetition = now()->addDay()->startOfDay();
     }
 
     

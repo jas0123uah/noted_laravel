@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Reviewnotecard;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

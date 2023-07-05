@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\UsersController;
-use App\Models\Dailystack;
+use App\Models\Reviewnotecard;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckModelOwnership;
 use App\Http\Middleware\CheckStackOwnership;
@@ -27,7 +27,7 @@ $models = [
     Stack::class => "stacks",
     User::class => "users",
     Notecard::class => "notecards",
-    Dailystack::class => "dailystacks"
+    //Reviewnotecard::class => "reviewnotecards"
 ];
 
 foreach ($models as $model_class => $model_plural) {
@@ -40,8 +40,8 @@ foreach ($models as $model_class => $model_plural) {
         Route::resource($model_plural, "App\Http\Controllers\\{$model_capital_plural}Controller");
         
         $middleware = [CheckModelOwnership::class . ":". $model_class];
-        //Ensure the stack we are trying to associate with a notecard or daily stack is ours
-        if ($model_singular === 'notecard' || $model_singular === 'dailystack') {
+        //Ensure the stack we are trying to associate with a notecard or review notecard is ours
+        if ($model_singular === 'notecard' || $model_singular === 'reviewnotecard') {
             $middleware[] = CheckStackOwnership::class;
         }
 
@@ -57,5 +57,6 @@ foreach ($models as $model_class => $model_plural) {
     });
 }
 
-Route::post('/api/dailystacks/', [App\Http\Controllers\MailController::class, 'index']);
+Route::post('/reviewnotecards', [App\Http\Controllers\MailController::class, 'index'])->middleware('auth');
+Route::get('/reviewnotecards/{user_id}/', [App\Http\Controllers\ReviewnotecardsController::class, 'show'])->middleware(['auth', 'checkRequestedReviewNotecards']);
 //Route::resource('notecards', NotecardsController::class);

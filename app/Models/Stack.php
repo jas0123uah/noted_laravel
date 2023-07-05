@@ -21,13 +21,13 @@ class Stack extends Model
 
     public function notecards()
     {
-        return $this->hasMany(Notecard::class, 'notecard_id');
+        return $this->hasMany(Notecard::class, 'stack_id');
     }
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
     public function daily_stack() {
-        return $this->belongsTo(DailyStack::class, 'stack_id');
+        return $this->belongsTo(Dailystack::class, 'stack_id');
         
     }
 

@@ -4,14 +4,14 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class GenerateDailyStacks extends Command
+class GenerateReviewNotecards extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:generate-daily-stacks';
+    protected $signature = 'app:generate-review-notecards';
 
     /**
      * The console command description.

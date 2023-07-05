@@ -1,20 +1,12 @@
 <?php
 
 namespace Tests\Feature;
-use App\Models\Notecard;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Tests\Helpers\TestHelper;
 use Illuminate\Support\Str;
-use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 class Stacks extends TestCase
 {

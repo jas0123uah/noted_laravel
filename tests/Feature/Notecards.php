@@ -111,7 +111,7 @@ class Notecards extends TestCase
             "front" => "Updated front",
             "back" => "Updated back", 
             "e_factor" => 1.8,
-            "repetition" => 1,
+            "repetition" => 0,
             "created_at" => $response["data"]["created_at"],
             "updated_at" => $response["data"]["updated_at"],
             "next_repetition" => now()->addDays(1)->startOfDay()->format('Y-m-d\TH:i:s.u\Z')
@@ -120,7 +120,6 @@ class Notecards extends TestCase
 
         //I can delete the notecard
         $response = $this->actingAs($myself)->delete("/api/notecards/{$notecard_id}")->json();
-        //dd($response);
         $this->assertEquals([
             "notecard_id" => $response["data"]["notecard_id"], 
             "user_id" => $response["data"]["user_id"], 
@@ -129,6 +128,7 @@ class Notecards extends TestCase
             "back" => $response["data"]["back"], 
             "e_factor" => $response["data"]["e_factor"],
             "repetition" => $response["data"]["repetition"],
+            "next_repetition" => now()->addDays(1)->startOfDay(),
             "created_at" => $response["data"]["created_at"],
             "updated_at" => $response["data"]["updated_at"],
         ], $response["data"]);
@@ -258,15 +258,17 @@ class Notecards extends TestCase
         $this->assertEquals([
                 "message" => "STACK_NOT_FOUND"
         ], $response);
+        
+        
+        
+        //Then try and associate it with someone elses stack via PUT
+        $notecard["stack_id"] = $stack_id;
         $response = $this->actingAs($myself)->put("/api/notecards/{$my_notecard_id}", $notecard)->json();
         $this->assertEquals([
                 "message" => "STACK_NOT_FOUND"
         ], $response);
 
-        //Try to PUT a notecard of my own and associate it with a stack that does not exist
         
-        //Then try and associate it with someone elses stack via PUT
-        $notecard["stack_id"] = $stack_id;
         $response = $this->actingAs($myself)->put("/api/notecards/{$my_notecard_id}", $notecard)->json();
         $this->assertEquals([
                 "message" => "STACK_NOT_FOUND"

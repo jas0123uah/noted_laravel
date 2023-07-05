@@ -26,9 +26,7 @@ class Stacks extends TestCase
         //I can create a stack
         $this->actingAs($user)->post('/api/stacks/', $stack);
         
-        //$user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
         $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
-        //dd($user_get);
     
         $this->assertEquals([
             "user_id" => $user_id,
@@ -98,6 +96,7 @@ class Stacks extends TestCase
                     "back" => "The back of the notecard",
                     "e_factor" => 2.5,
                     "repetition" => 0,
+                    "next_repetition" => $response["data"]["notecards"][0]["next_repetition"],
                     "created_at" => $response["data"]["notecards"][0]["created_at"],
                     "updated_at" => $response["data"]["notecards"][0]["updated_at"],
                 ],
@@ -122,6 +121,7 @@ class Stacks extends TestCase
                     "back" => "The back of the notecard",
                     "e_factor" => 2.5,
                     "repetition" => 0,
+                    "next_repetition" => $response["data"]["notecards"][0]["next_repetition"],
                     "created_at" => $response["data"]["notecards"][0]["created_at"],
                     "updated_at" => $response["data"]["notecards"][0]["updated_at"],
                 ],

@@ -2,16 +2,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\TestCase;
+use Tests\Helpers\TestHelper;
 use Illuminate\Support\Str;
-use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 class Users extends TestCase
 {
@@ -44,9 +42,14 @@ class Users extends TestCase
         //I'm in the db
         $user_id = DB::table('users')->where('first_name', 'John')->value('user_id');
         $user = User::find($user_id);
-        $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"][0];
-        //dd($user_get);
-        // $user = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+
+        $response =  $this->actingAs($user)->post("/api/stacks/", [
+            "name" => "My first stack"
+
+        ])->json();
+        $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
+        
+        //Create a stack
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "John",
@@ -57,10 +60,19 @@ class Users extends TestCase
             "subscription_token" => $user_get["subscription_token"],
             "created_at" => $user_get["created_at"],
             "updated_at" => $user_get["updated_at"],
+            "stacks" => [
+                [
+                    "stack_id" => $user_get["stacks"][0]["stack_id"],
+                    "created_at" => $user_get["stacks"][0]["created_at"],
+                    "updated_at" => $user_get["stacks"][0]["updated_at"],
+                    "user_id" => $user_id,
+                    "name" => "My first stack"
+
+                ]
+            ]
 
         ], $user_get);
 
-        //dd($user_get);
 
         //I can update the user
         $updates = [
@@ -74,7 +86,7 @@ class Users extends TestCase
 
         //The user is updated
 
-        $user_get = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+        $user_get = $this->getJson("/api/users/{$user_id}")->json()["data"];
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "Johnny",
@@ -85,6 +97,16 @@ class Users extends TestCase
             "subscription_token" => $user_get["subscription_token"],
             "created_at" => $user_get["created_at"],
             "updated_at" => $user_get["updated_at"],
+            "stacks" => [
+                [
+                    "stack_id" => $user_get["stacks"][0]["stack_id"],
+                    "created_at" => $user_get["stacks"][0]["created_at"],
+                    "updated_at" => $user_get["stacks"][0]["updated_at"],
+                    "user_id" => $user_id,
+                    "name" => "My first stack"
+
+                ]
+            ]
 
         ], $user_get);
 
@@ -96,7 +118,6 @@ class Users extends TestCase
             now()->addMinutes(60),
             ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]
         );
-        //dd($url);
 
         $response = $this->actingAs($user)->get($url);
 
@@ -105,8 +126,6 @@ class Users extends TestCase
         $this->assertTrue($user->hasVerifiedEmail());
         //I can unsubscribe
         $this->actingAs($user)->get("/unsubscribe/{$user->subscription_token}");
-
-        //$response = $this->get("/unsubscribe/{$user->subscription_token}");
 
         //I can change my password
 
@@ -132,103 +151,40 @@ class Users extends TestCase
     }
     public function test_user_unauthenticated() : void {
         //Register someone else as a user.
-        $data = [
-            'first_name' => 'Jane',
-            'last_name' => 'Smith',
-            'email' => 'janesmith@example.com',
-            'password' => 'myPassword',
-            'password_confirmation' => 'myPassword',
-        ];
-        $this->post('/register', $data);
-
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'Jane',
-            'last_name' => 'Smith',
-            'email' => 'janesmith@example.com',
-        ]);
-
-        // Get the other users id
-        $not_my_user_id = DB::table('users')->where('first_name', 'Jane')->value('user_id');
-        
-
-        Auth::logout(); 
-
-        //Ensure we are a guest
-        $this->assertGuest();
-        //Can't get a user if you aren't logged in
-        $response = $this->get("/api/users/{$not_my_user_id}");
-        $response->assertJson([
-            "message" => "USER_NOT_FOUND"
-        ]);
-
-        //Can't update user if you aren't logged in
+        $user = TestHelper::createFakeUser("Jane", "Smith");
+        $not_my_user_id = $user["user_id"];
         $updates = [
             'first_name' => 'Johnny',
             'last_name' => 'Doe II',
             'email' => 'johnnydoe@example.com',
         ];
-        //Can't delete users if you aren't logged in
-        $response = $this->put("/api/users/{$not_my_user_id}/", $updates);
-        $response->assertJson([
-            "message" => "UNAUTHORIZED"
-        ]);
         
-
-
-        $response = $this->delete("/api/users/{$not_my_user_id}/");
-        $response->assertJson([
-            "message" => "UNAUTHORIZED"
-        ]);
-
-
+        Auth::logout(); 
+        
+        //Ensure we are a guest
+        $this->assertGuest();
+        //Can't get a user if you aren't logged in
+        $response_get = $this->get("/api/users/{$not_my_user_id}");
+        $response_update = $this->put("/api/users/{$not_my_user_id}/", $updates);
+        $response_delete = $this->delete("/api/users/{$not_my_user_id}/");
+        $responses = [$response_get, $response_update, $response_delete ];
+        foreach ($responses as $response) {
+            $response->assertRedirect('/login');
+        }
     }
     public function test_user_unauthorized(): void
     {
         //Register someone else as a user. (we do not have access to this person's account)
-        $data = [
-            'first_name' => 'Jane',
-            'last_name' => 'Smith',
-            'email' => 'janesmith@example.com',
-            'password' => 'myPassword',
-            'password_confirmation' => 'myPassword',
-        ];
-        $this->post('/register', $data);
-
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'Jane',
-            'last_name' => 'Smith',
-            'email' => 'janesmith@example.com',
-        ]);
-
-        // Get the other users id
-        $not_my_user_id = DB::table('users')->where('first_name', 'Jane')->value('user_id');
-
+        $user = TestHelper::createFakeUser("Jane", "Smith");
+        $not_my_user_id = $user["user_id"];
 
         //Register myself as a user.
-        $my_data = [
-            'first_name' => 'Jay',
-            'last_name' => 'Spencer',
-            'email' => 'jayspencer@example.com',
-            'password' => 'myPassword',
-            'password_confirmation' => 'myPassword',
-        ];
-        
-        Auth::logout(); 
-        $this->post('/register', $my_data);
-
-
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'Jay',
-            'last_name' => 'Spencer',
-            'email' => 'jayspencer@example.com',
-        ]);
-        $myself = User::where('first_name', 'Jay')->first();
+        $myself = TestHelper::createFakeUser("Jay", "Spencer");
         //Can't get someone that is not yourself
-        $response = $this->actingAs($myself)->get("/api/users/{$not_my_user_id}");
-        $response->assertJson([
+        $response = $this->actingAs($myself)->get("/api/users/{$not_my_user_id}")->json();
+        $this->assertEquals([
             "message" => "USER_NOT_FOUND"
-        ]);
-
+        ], $response);
         //Can't update someone that's not yourself
         $updates = [
             'first_name' => 'Johnny',
@@ -236,26 +192,23 @@ class Users extends TestCase
             'email' => 'johnnydoe@example.com',
         ];
 
-        $response = $this->actingAs($myself)->put("/api/users/{$not_my_user_id}/", $updates);
-        $response->assertJson([
-            "message" => "UNAUTHORIZED"
-        ]);
+        $response = $this->actingAs($myself)->put("/api/users/{$not_my_user_id}/", $updates)->json();
+        $this->assertEquals([
+            "message" => "USER_NOT_FOUND"
+        ], $response);
         
 
-
-        $response = $this->actingAs($myself)->delete("/api/users/{$not_my_user_id}/");
-        $response->assertJson([
-            "message" => "UNAUTHORIZED"
-        ]);
-        //$myself = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
+        $response = $this->actingAs($myself)->delete("/api/users/{$not_my_user_id}/")->json();
+        $this->assertEquals([
+            "message" => "USER_NOT_FOUND"
+        ], $response);
     }
     public function test_user_invalid_data() : void {
+        //Create the two users we're going to be testing with
+
+        $user = TestHelper::createFakeUser("Jay", "Spencer");
+        TestHelper::createFakeUser("Jane", "Smith");
         $data = [
-            // 'first_name' => 'Jane',
-            // 'last_name' => 'Smith',
-            // 'email' => 'janesmith@example.com',
-            // 'password' => 'myPassword',
-            // 'password_confirmation' => 'myPassword',
         ];
         $response = $this->post('/register', $data);
         
@@ -296,7 +249,7 @@ class Users extends TestCase
             'password_confirmation' => 'myPassword!',
         ];
 
-        $response = $this->post('/register', $data);
+        
         Auth::logout();
         $response = $this->post('/register', $data);
 
@@ -318,7 +271,7 @@ class Users extends TestCase
             'email' => '',
         ];
 
-        $user_id = DB::table('users')->where('first_name', 'Jay')->value('user_id');
+        $user_id = $user["user_id"];
         $user = User::find($user_id);
 
         $response = $this->actingAs($user)->put("/api/users/{$user_id}/", $updates);
@@ -328,6 +281,29 @@ class Users extends TestCase
             "last_name" => "The last name field must be at least 1 characters.",
             "email" => "The email field must be at least 1 characters.",
         ]);
-    
+
+
+        //Try to update user's email to someone else's email
+
+        $updates = [
+            'first_name' => 'Jay',
+            'last_name' => 'Spencer',
+            'email' => 'janesmith@example.com',
+        ];
+
+        $response = $this->actingAs($user)->put("/api/users/{$user_id}/", $updates);
+        $this->assertEquals(session()->get('errors')->get('email')[0], "The email has already been taken.");
+        $updates = [
+            'first_name' => Str::random(256),
+            'last_name' => Str::random(256),
+            'email' => "{$long_string}@example.com",
+        ];
+        $response = $this->actingAs($user)->put("/api/users/{$user_id}/", $updates);
+        $errors = session()->get('errors')->all();
+        $this->assertEquals([
+            "0" => "The first name field must not be greater than 255 characters.",
+            "1" => "The last name field must not be greater than 255 characters.",
+            "2" => "The email field must not be greater than 255 characters.",
+        ], $errors);
     }
 }

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_stacks', function (Blueprint $table) {
-            $table->id(column:'daily_stacks_id');
+        Schema::create('review_notecards', function (Blueprint $table) {
+            $table->id(column:'review_notecard_id');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')->nullable(false)->onUpdate('cascade')->onDelete('cascade');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_stacks');
+        Schema::dropIfExists('review_notecards');
     }
 };

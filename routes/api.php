@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\UsersController;
+use App\Models\Dailystack;
 use Illuminate\Http\Request;
+use App\Http\Middleware\CheckModelOwnership;
+use App\Http\Middleware\CheckStackOwnership;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StacksController;
 use App\Http\Controllers\NotecardsController;
+use App\Models\Stack;
+use App\Models\User;
+use App\Models\Notecard;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,13 +22,40 @@ use App\Http\Controllers\NotecardsController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-// Route::resource('users', );
-Route::resource('stacks', StacksController::class);
-Route::get('/stacks', function(){
-return view('welcome');
-});
-Route::resource('users', UsersController::class);
-Route::resource('notecards', NotecardsController::class);
+
+$models = [
+    Stack::class => "stacks",
+    User::class => "users",
+    Notecard::class => "notecards",
+    Dailystack::class => "dailystacks"
+];
+
+foreach ($models as $model_class => $model_plural) {
+    Route::group(['middleware' => ['auth']], function () use ($model_class, $model_plural) {
+        // Apply 'auth' middleware to all model endpoints
+        $model_capital_plural = ucfirst($model_plural);
+        $model_singular = substr($model_plural, 0, -1);
+
+        // Route for all model endpoints
+        Route::resource($model_plural, "App\Http\Controllers\\{$model_capital_plural}Controller");
+        
+        $middleware = [CheckModelOwnership::class . ":". $model_class];
+        //Ensure the stack we are trying to associate with a notecard or daily stack is ours
+        if ($model_singular === 'notecard' || $model_singular === 'dailystack') {
+            $middleware[] = CheckStackOwnership::class;
+        }
+
+        // CRD routes with 'CheckModelOwnership' middleware
+        Route::middleware($middleware)->group(function () use ($model_singular, $model_plural, $model_capital_plural) {
+            Route::get("{$model_plural}/{{$model_singular}}", "App\Http\Controllers\\{$model_capital_plural}Controller@show");
+            Route::post($model_plural, "App\Http\Controllers\\{$model_capital_plural}Controller@store"); // Add this line for the POST route
+            Route::put("{$model_plural}/{{$model_singular}}", "App\Http\Controllers\\{$model_capital_plural}Controller@update");
+            Route::delete("{$model_plural}/{{$model_singular}}", "App\Http\Controllers\\{$model_capital_plural}Controller@destroy");
+        });
+
+        
+    });
+}
+
+Route::post('/api/dailystacks/', [App\Http\Controllers\MailController::class, 'index']);
+//Route::resource('notecards', NotecardsController::class);

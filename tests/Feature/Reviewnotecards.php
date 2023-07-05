@@ -74,7 +74,6 @@ class Reviewnotecards extends TestCase
         //If I run the api endpoint again no new notecards are added
         $this->actingAs($subscribed_and_verified)->post('/api/reviewnotecards');
         $this->assertEquals(2, Reviewnotecard::all()->count());
-        //dd(78);
         // If I run the function used to identify notecards that need to be study after review notecards are created  for the day, no notecards are returned --> meaning no emails are sent
         $review_items = Notecard::getItemsForReview();
         $this->assertEquals(0, count($review_items));

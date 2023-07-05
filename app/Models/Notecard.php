@@ -71,12 +71,6 @@ class Notecard extends Model
                 WHERE DATE(rn.created_at) = CURDATE()
             );
     ");
-    // return self::where('next_repetition', '<=', now())
-    //     ->whereHas('user', function ($query) {
-    //         $query->whereNotNull('email_verified_at')
-    //             ->where('is_subscribed', true);
-    //     })
-    //     ->get();
 }
 
     protected $fillable = [

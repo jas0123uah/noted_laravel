@@ -10,40 +10,6 @@ use App\Models\Notecard;
 use Illuminate\Support\Facades\DB;
 class MailController extends Controller
 {
-    //
-    // public function index(){
-    //     //Generate the daily stacks
-
-    //     //Send the emails
-
-    //     //Sample/ demo
-    //     $today = now()->format("M D,Y ");
-    //     $first_name = "Jay";
-    //     $data = [
-    //         'subject' => 'This is a test',
-    //         'body' => "
-    //         Hello {$first_name},
-    //         Your stack for {$today} is here!",
-    //     ];
-    //     try {
-    //         //code...
-    //         $email = 'jspencer5396@gmail.com';
-    //         Mail::to($email)->send(new NotedMailable($data));
-    //         return response()->json([
-    //             'message' => "Successfully emailed daily stack to {$email} for ${today}."
-    //         ]);
-    //     } catch (\Throwable $th) {
-    //         //throw $th;
-    //         Log::info($th);
-    //         return response()->json([
-    //             'message' => "Failed to email daily stack to {$email} for ${today}."
-    //         ]);
-    //     }
-
-
-        
-    // }
-
     public function index()
 {
 

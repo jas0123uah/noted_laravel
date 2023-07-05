@@ -41,7 +41,7 @@ class NotedMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.daily_stack_email', //Todo specify view here
+            view: 'emails.daily_stack_email',
             with: [
                 'data' => $this->data
             ]

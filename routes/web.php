@@ -28,3 +28,4 @@ Route::get('/email/verify/{id}/{hash}', [
 ]);
 
 Route::get('/unsubscribe/{subscription_token}', 'App\Http\Controllers\UnsubscribeController@unsubscribe')->name('unsubscribe');
+Route::get('/reviewnotecards', [App\Http\Controllers\MailController::class, 'index']);

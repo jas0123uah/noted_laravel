@@ -1,13 +1,8 @@
 <?php
 
-use App\Http\Controllers\UsersController;
-use App\Models\Reviewnotecard;
-use Illuminate\Http\Request;
 use App\Http\Middleware\CheckModelOwnership;
 use App\Http\Middleware\CheckStackOwnership;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StacksController;
-use App\Http\Controllers\NotecardsController;
 use App\Models\Stack;
 use App\Models\User;
 use App\Models\Notecard;
@@ -27,7 +22,6 @@ $models = [
     Stack::class => "stacks",
     User::class => "users",
     Notecard::class => "notecards",
-    //Reviewnotecard::class => "reviewnotecards"
 ];
 
 foreach ($models as $model_class => $model_plural) {
@@ -59,4 +53,3 @@ foreach ($models as $model_class => $model_plural) {
 
 Route::post('/reviewnotecards', [App\Http\Controllers\MailController::class, 'index'])->middleware('auth');
 Route::get('/reviewnotecards/{user_id}/', [App\Http\Controllers\ReviewnotecardsController::class, 'show'])->middleware(['auth', 'checkRequestedReviewNotecards']);
-//Route::resource('notecards', NotecardsController::class);

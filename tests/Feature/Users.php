@@ -47,14 +47,9 @@ class Users extends TestCase
             "name" => "My first stack"
 
         ])->json();
-       // dd($response);
         $user_get = $this->actingAs($user)->getJson("/api/users/{$user_id}")->json()["data"];
         
         //Create a stack
-
-        //dd($user_get);
-        // $user = $this->getJson("/api/users/{$user_id}")->json()["data"][0];
-        //dd($user_get["stacks"]);
         $this->assertEquals([
             "user_id" => $user_id,
             "first_name" => "John",
@@ -78,7 +73,6 @@ class Users extends TestCase
 
         ], $user_get);
 
-        //dd($user_get);
 
         //I can update the user
         $updates = [
@@ -124,7 +118,6 @@ class Users extends TestCase
             now()->addMinutes(60),
             ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]
         );
-        //dd($url);
 
         $response = $this->actingAs($user)->get($url);
 
@@ -133,8 +126,6 @@ class Users extends TestCase
         $this->assertTrue($user->hasVerifiedEmail());
         //I can unsubscribe
         $this->actingAs($user)->get("/unsubscribe/{$user->subscription_token}");
-
-        //$response = $this->get("/unsubscribe/{$user->subscription_token}");
 
         //I can change my password
 
@@ -177,7 +168,6 @@ class Users extends TestCase
         $response_update = $this->put("/api/users/{$not_my_user_id}/", $updates);
         $response_delete = $this->delete("/api/users/{$not_my_user_id}/");
         $responses = [$response_get, $response_update, $response_delete ];
-        //dd("dgfd");
         foreach ($responses as $response) {
             $response->assertRedirect('/login');
         }
@@ -217,7 +207,7 @@ class Users extends TestCase
         //Create the two users we're going to be testing with
 
         $user = TestHelper::createFakeUser("Jay", "Spencer");
-        $other_user = TestHelper::createFakeUser("Jane", "Smith");
+        TestHelper::createFakeUser("Jane", "Smith");
         $data = [
         ];
         $response = $this->post('/register', $data);

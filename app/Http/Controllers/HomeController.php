@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class HomeController extends Controller
 {
@@ -23,6 +26,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+        $stacks = $user->stacks()->with('notecards')->get();
+        $stacks_and_first_notecard = [];
+        foreach ($stacks as $stack) {
+            $first_notecard = $stack->notecards->first();
+            $stacks_and_first_notecard[$stack->name] = $first_notecard;
+        }
+        return view('home', compact('stacks_and_first_notecard'));
+
     }
 }

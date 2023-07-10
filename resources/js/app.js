@@ -6,7 +6,9 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import router from "./routes";
 
+//Vue.use(VueRouter);
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
@@ -17,6 +19,23 @@ const app = createApp({});
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
+
+
+// const router = new VueRouter({
+//     mode: "history",
+//     routes: [
+//         {
+//             path: "/",
+//             name: "home",
+//             component: Home,
+//         },
+//         {
+//             path: "/hello",
+//             name: "hello",
+//             component: Hello,
+//         },
+//     ],
+// });
 
 /**
  * The following block of code may be used to automatically register your
@@ -35,5 +54,5 @@ Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, 
  * an "id" attribute of "app". This element is included with the "auth"
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
-
+app.use(router);
 app.mount('#app');

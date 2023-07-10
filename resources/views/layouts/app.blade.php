@@ -8,19 +8,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Roboto:wght@100&family=Water+Brush&display=swap" rel="stylesheet">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-black shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="text-white navbar-brand roboto fw-bolder" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -34,22 +34,49 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-center d-flex flex-row justify-content-evenly">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
+                            <!-- @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            @endif
+                            @endif -->
+                            <!-- Testing -->
+                            <li class="nav-item">
+                                    <a class="nav-link text-white" href="{{ route('about') }}">{{ __('About') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                    <a class="nav-link text-white" href="{{ route('about') }}">{{ __('Demo') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                    <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>
+                            </li>
+                        
+                            <!-- End Testing -->
                         @else
-                            <li class="nav-item dropdown">
+                        <li class="d-flex gap-5">
+    <a href="{{ route('about') }}" class="text-decoration-none hover-underline-animation">About</a>
+    <a href="{{ route('home') }}" class="text-decoration-none hover-underline-animation">My Learning</a>
+    <a
+        href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();"
+        class="text-decoration-none hover-underline-animation" id="logout-link">Logout</a>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+        @csrf
+    </form>
+</li>
+                            <!-- <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
@@ -65,7 +92,7 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
+                            </li> -->
                         @endguest
                     </ul>
                 </div>

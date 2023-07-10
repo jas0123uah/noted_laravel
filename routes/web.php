@@ -21,6 +21,7 @@ Route::resource('stacks', '\App\Http\Controllers\StacksController')->middleware(
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/about', [App\Http\Controllers\AboutController::class, 'index'])->name('about');
 
 Route::get('/email/verify/{id}/{hash}', [
     'as' => 'verification.verify',

@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreign('stack_id')->references('stack_id')->on('stacks')->nullable(false)->onUpdate('cascade')->onDelete('cascade');
             $table->text('front')->nullable(false)->min(1);
             $table->text('back')->nullable(false)->min(1);
-            $table->float('e_factor')->nullable(false)->default(2.5);
+            $table->decimal('e_factor', 10, 2)->nullable(false)->default(2.50);
             $table->integer('repetition')->nullable(false)->default(0);
+            $table->timestamp('next_repetition')->default(DB::raw('DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY)'));
             $table->timestamps();
         });
     }

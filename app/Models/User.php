@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,28 @@ class User extends Authenticatable
     public function getKeyName()
     {
         return 'user_id';
+    }
+
+    public function notecards(){
+        return $this->hasMany(Notecard::class, 'user_id');
+    }
+    public function stacks(){
+        return $this->hasMany(Stack::class, 'user_id');
+    }
+    public function review_notecards() {
+        return $this->hasMany(Reviewnotecard::class, 'user_id');
+    }
+    public function makeReviewNotecards(){
+        return DB::select("
+        SELECT n.notecard_id, n.user_id, n.stack_id, u.email 
+        FROM notecards n
+        JOIN users u ON u.user_id = n.user_id
+        WHERE 
+            n.next_repetition <= NOW() 
+            AND u.email_verified_at IS NOT NULL 
+            AND u.is_unsubscribed = FALSE
+            AND u.user_id = '{$this->user_id}'
+    ");
     }
 
     /**

@@ -7,7 +7,8 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 .button{
-    background-color: $noted-purple;
+    background-color: $noted-purple !important;
+    color: white;
     
 }
 .link-button:active, .link-button:hover{
@@ -41,4 +42,26 @@
 .hover-underline-animation:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+.ignore-subseq-p + p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.hide-toolbar .ql-toolbar {
+    padding: 0 !important;
+    border-bottom: hidden !important;
+    border-color: transparent !important;
+    span {
+        display: none;
+    }
+}
+.animated {
+	transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card.current {
+	pointer-events: auto;
+}
+.ql-disabled{
+  border: 0 !important;
 }

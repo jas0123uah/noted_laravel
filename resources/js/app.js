@@ -7,6 +7,10 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import router from "./routes";
+import { QuillEditor } from "@vueup/vue-quill";
+import { MotionPlugin } from '@vueuse/motion';
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { createPinia } from "pinia";
 
 //Vue.use(VueRouter);
 /**
@@ -16,6 +20,7 @@ import router from "./routes";
  */
 
 const app = createApp({});
+app.use(MotionPlugin);
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
@@ -45,14 +50,24 @@ app.component('example-component', ExampleComponent);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+app.component("QuillEditor", QuillEditor);
 Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, definition]) => {
+    console.log(
+        path
+            .split("/")
+            .pop()
+            .replace(/\.\w+$/, "")
+    );
     app.component(path.split('/').pop().replace(/\.\w+$/, ''), definition.default);
 });
+console.log(app, "THIS IS APP")
 
 /**
  * Finally, we will attach the application instance to a HTML element with
  * an "id" attribute of "app". This element is included with the "auth"
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
 app.mount('#app');

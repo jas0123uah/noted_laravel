@@ -19,6 +19,9 @@
     <script type="text/javascript">
         // Move your Vue code outside the template
         var stacks_and_first_notecard = {!! json_encode($stacks_and_first_notecard) !!};
+        var my_token = {!! json_encode($my_token['token']) !!};
+        localStorage.setItem("access_token", my_token);
+        console.log(my_token, "MY TOKEN")
         new Vue({
             el: '#app',
             data() {
@@ -40,11 +43,12 @@
 </head>
 
 <div class="container d-flex flex-column align-items-center">
-    <div class="row justify-content-center">
+    <div class=" w-100 row justify-content-center">
         <div class="col-md-8">
 
                     <div id="app">
-                        @foreach($stacks_and_first_notecard as $stack_name => $notecard)
+                        <router-view></router-view>
+                        <!-- @foreach($stacks_and_first_notecard as $stack_name => $notecard)
                         <div class=" d-flex flex-column width-fit-content">
                             <span>{{$notecard->stack_id}}</span>
                                 <homepage-notecard :notecard="{{json_encode($notecard)}}"></homepage-notecard>
@@ -52,7 +56,7 @@
 
 
                         </div>    
-                        @endforeach
+                        @endforeach -->
                         <!-- <template v-for="notecard in stacksAndFirstNotecard">
                             <span>this should appear</span>
                             <homepage-notecard :notecard="notecard"></homepage-notecard>

@@ -11,8 +11,20 @@ class StacksController extends Controller
      */
     public function index()
     {
-        //
-        return view('test');
+        // //
+        Log::info("HIT IT");
+        // return view('test');
+        $user = Auth::user();
+        $stacks = $user->stacks()->with('notecards')->get();
+        $stacks_and_first_notecard = [];
+        foreach ($stacks as $stack) {
+            $first_notecard = $stack->notecards->first();
+            $stacks_and_first_notecard[$stack->name] = $first_notecard;
+        }
+        return response()->json([
+            "data" => $stacks_and_first_notecard
+
+        ]);
     }
 
     /**
@@ -66,6 +78,7 @@ class StacksController extends Controller
     public function edit(string $id)
     {
         //
+        return view('stacks', ["stack_id" => $id]);
     }
 
     /**

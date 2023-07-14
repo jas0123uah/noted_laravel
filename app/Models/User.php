@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+     protected $guarded = []; // like $fillable=[all] // 7/12
     /**
      * Get the primary key column name.
      *

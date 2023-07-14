@@ -18,6 +18,7 @@ use App\Models\Notecard;
 */
 
 
+//Route::post('/login', 'AuthController@login');
 $models = [
     Stack::class => "stacks",
     User::class => "users",
@@ -25,7 +26,7 @@ $models = [
 ];
 
 foreach ($models as $model_class => $model_plural) {
-    Route::group(['middleware' => ['auth']], function () use ($model_class, $model_plural) {
+    Route::group(['middleware' => ['auth:sanctum', 'auth']], function () use ($model_class, $model_plural) {
         // Apply 'auth' middleware to all model endpoints
         $model_capital_plural = ucfirst($model_plural);
         $model_singular = substr($model_plural, 0, -1);
@@ -56,6 +57,6 @@ Route::get('/reviewnotecards/{user_id}/', [App\Http\Controllers\ReviewnotecardsC
 Route::get('/access-token', function () {
     Log::debug(auth()->user());
     return response()->json([
-       "data" => auth()->user()->accessToken()
+        "data" => auth()->user()->accessToken()
     ]);
 })->middleware('auth.session');

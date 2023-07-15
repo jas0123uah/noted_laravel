@@ -12,6 +12,7 @@ export const useStacksStore = defineStore("stacks", {
     },
     actions: {
         setStacks(stacks) {
+            console.log(stacks, "STACKS")
             this.stacks = stacks.map((s) => {
                 s.original = _.cloneDeep(s);
                 return s;

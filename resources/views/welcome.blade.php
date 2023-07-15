@@ -34,7 +34,7 @@
                 <homepage-notecard
                     class="mb-3 mb-md-0"
                     :can_be_deleted="{{ json_encode(false) }}"
-                    :notecard="{{ json_encode(['front' => 'JavaScript is statically typed.']) }}"
+                    :item="{{ json_encode(['front' => 'JavaScript is statically typed.', ]) }}"
                 ></homepage-notecard>
                 <div>
                     <p class="fw-bold">Learn what matters to you</p>

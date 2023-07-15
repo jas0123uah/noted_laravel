@@ -18,6 +18,7 @@ import _ from 'lodash';
 import { useModalStore } from '@/stores/modal'
 import { useNotecardsStore } from '@/stores/notecards'
 import { useStacksStore } from '@/stores/stacks'
+import { useResponsemessageStore } from '@/stores/response_message'
 import { storeToRefs } from 'pinia'
 export default {
     props: {
@@ -31,7 +32,7 @@ export default {
         },
         stack_title: {
             type: String,
-            default: false
+            default: ''
         }
     },
     data(){
@@ -39,6 +40,7 @@ export default {
             modal_store: useModalStore(),
             notecards_store: useNotecardsStore(),
             stacks_store: useStacksStore(),
+            response_message_store: useResponsemessageStore(),
 
         }
     },
@@ -62,7 +64,8 @@ export default {
             let item_type = this.stack_title ? 'stack' : 'notecard'
             try {
                 console.log(item_type, "DELETEING THIS GUY")
-                await window.axios.delete(`/api/${item_type}s/${item_type[`${item_type}_id`]}`);
+                let res = await window.axios.delete(`/api/${item_type}s/${item[`${item_type}_id`]}`);
+                this.response_message_store.setResponseMessage(res.data.message);
                 if(item_type === 'notecard') this.notecards_store.removeNotecard(item);
                 else this.stacks_store.removeStack(item);
             } catch (error) {

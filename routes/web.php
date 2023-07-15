@@ -29,3 +29,4 @@ Route::get('/email/verify/{id}/{hash}', [
 ]);
 
 Route::get('/unsubscribe/{subscription_token}', 'App\Http\Controllers\UnsubscribeController@unsubscribe')->name('unsubscribe');
+Route::post('/demo', 'App\Http\Controllers\Auth\LoginController@demo')->name('demo');

@@ -15,6 +15,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Roboto:wght@100&family=Water+Brush&display=swap" rel="stylesheet">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    <!-- Custom Scripts -->
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Find the demo link element by its ID
+                const demoLink = document.getElementById('demo-link');
+
+                // Add a click event listener to the demo link
+                demoLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default link behavior
+
+                    // Create a new form element
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('demo') }}'; // Replace with your demo login route
+
+                    // Create a CSRF token input field
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}'; // Add the CSRF token value
+
+                    // Append the CSRF token input field to the form
+                    form.appendChild(csrfToken);
+
+                    // Append the form to the document body
+                    document.body.appendChild(form);
+
+                    // Submit the form
+                    form.submit();
+                });
+            });
+        </script>
+    @endsection
 </head>
 <body>
     <div id="app">
@@ -50,49 +85,27 @@
                             @endif -->
                             <!-- Testing -->
                             <li class="nav-item">
-                                    <a class="nav-link text-white" href="{{ route('about') }}">{{ __('About') }}</a>
+                                <a class="nav-link text-white" href="{{ route('about') }}">{{ __('About') }}</a>
                             </li>
                             <li class="nav-item">
-                                    <a class="nav-link text-white" href="{{ route('about') }}">{{ __('Demo') }}</a>
+                                <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             <li class="nav-item">
-                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a id="demo-link" class="nav-link text-white" href="#">{{ __('Demo') }}</a>
                             </li>
                             <li class="nav-item">
-                                    <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>
+                                <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>
                             </li>
-                        
                             <!-- End Testing -->
                         @else
-                        <li class="d-flex gap-5">
-    <a href="{{ route('about') }}" class="text-decoration-none hover-underline-animation">About</a>
-    <a href="{{ route('home') }}" class="text-decoration-none hover-underline-animation">My Learning</a>
-    <a
-        href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();"
-        class="text-decoration-none hover-underline-animation" id="logout-link">Logout</a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-        @csrf
-    </form>
-</li>
-                            <!-- <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li> -->
+                            <li class="d-flex gap-5">
+                                <a href="{{ route('about') }}" class="text-decoration-none hover-underline-animation">About</a>
+                                <a href="{{ route('home') }}" class="text-decoration-none hover-underline-animation">My Learning</a>
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-decoration-none hover-underline-animation" id="logout-link">Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                </form>
+                            </li>
                         @endguest
                     </ul>
                 </div>

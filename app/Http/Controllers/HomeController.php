@@ -26,6 +26,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        Log::info('Home controller');
         $user = Auth::user();
         //$token = $request->user()->createToken($request->token_name);
        // $token = $request->user()->createToken($request->token_name);

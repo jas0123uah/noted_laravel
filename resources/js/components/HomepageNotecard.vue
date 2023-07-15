@@ -52,7 +52,6 @@ export default {
     methods: {
         confirmDelete(item){
             //Item may be a stack or notecard
-            console.log(item, "NOTECARD")
             this.modal_store.setModal({
                 type: 'CONFIRM',
                 message: `<span>Are you sure you want to delete:</span> <p class="mx-1 ignore-subseq-p">${_.truncate(item.front || item.name)}</p> <span>This action cannot be undone.</span>`,
@@ -63,13 +62,12 @@ export default {
             //Item may be a stack or notecard
             let item_type = this.stack_title ? 'stack' : 'notecard'
             try {
-                console.log(item_type, "DELETEING THIS GUY")
                 let res = await window.axios.delete(`/api/${item_type}s/${item[`${item_type}_id`]}`);
                 this.response_message_store.setResponseMessage(res.data.message);
                 if(item_type === 'notecard') this.notecards_store.removeNotecard(item);
                 else this.stacks_store.removeStack(item);
             } catch (error) {
-                console.log(error, "ERROR")
+                console.error(error)
                 if (error.response.status >400) {
                     this.modal_store.setModal({
                         type: 'ERROR',

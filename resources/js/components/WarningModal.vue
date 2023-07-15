@@ -1,15 +1,16 @@
 <template>
-    <div class="modal-overlay" :style="modalStyle" @click="$emit('closeModal', null)">
+    <div class="modal-overlay" :style="modal_style" @click="$emit('closeModal', null)">
         <div class="modal-container">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div :class="needs_input ? ['d-flex', 'flex-column', 'gap-2'] : null" class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{title || "WARNING"}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" @click="modal_store.setModal({});" aria-label="Close"></button>
                     </div>
                     <div v-html="warning_message" class="modal-body"></div>
+                    <input :placeholder="input_placeholder" v-if="needs_input" v-model="input" type="text" class="input-group form-control">
                     <div class="modal-footer gap-5 align-self-center">
-                        <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click="modal_store.setModal({}); modal_function();">Confirm</button>
+                        <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click="modal_store.setModal({}); modal_function(this.input);">Confirm</button>
                         <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click=" modal_store.setModal({});">Close</button>
                     </div>
 
@@ -26,9 +27,12 @@ export default {
     props: {
         warning_message: {
             type: String,
-            required: true
+            //required: true
         },
         title: {
+            type: String,
+        },
+        input_placeholder: {
             type: String,
         },
         modal_function: {
@@ -38,14 +42,18 @@ export default {
     data(){
         return {
             modal_store: useModalStore(),
+            input: '',
 
         }
     },
     computed: {
-        modalStyle() {
+        modal_style() {
             return {
-            display: this.warning_message ? 'flex' : 'none',
+            display: this.title ? 'flex' : 'none',
             };
+        },
+        needs_input(){
+            return this?.title?.includes('Create');
         }
     }
 };

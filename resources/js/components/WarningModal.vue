@@ -10,7 +10,7 @@
                     <div v-html="warning_message" class="modal-body"></div>
                     <input :placeholder="input_placeholder" v-if="needs_input" v-model="input" type="text" class="input-group form-control">
                     <div class="modal-footer gap-5 align-self-center">
-                        <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click="modal_store.setModal({}); modal_function(this.input);">Confirm</button>
+                        <button v-if="modal_function" type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click="modal_store.setModal({}); modal_function(this.input);">Confirm</button>
                         <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click=" modal_store.setModal({});">Close</button>
                     </div>
 
@@ -50,6 +50,7 @@ export default {
         modal_style() {
             return {
             display: this.title ? 'flex' : 'none',
+            'z-index': 9999
             };
         },
         needs_input(){

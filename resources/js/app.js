@@ -12,7 +12,6 @@ import { MotionPlugin } from '@vueuse/motion';
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { createPinia } from "pinia";
 
-//Vue.use(VueRouter);
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
@@ -26,22 +25,6 @@ import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 
 
-// const router = new VueRouter({
-//     mode: "history",
-//     routes: [
-//         {
-//             path: "/",
-//             name: "home",
-//             component: Home,
-//         },
-//         {
-//             path: "/hello",
-//             name: "hello",
-//             component: Hello,
-//         },
-//     ],
-// });
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -52,15 +35,8 @@ app.component('example-component', ExampleComponent);
 
 app.component("QuillEditor", QuillEditor);
 Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, definition]) => {
-    console.log(
-        path
-            .split("/")
-            .pop()
-            .replace(/\.\w+$/, "")
-    );
     app.component(path.split('/').pop().replace(/\.\w+$/, ''), definition.default);
 });
-console.log(app, "THIS IS APP")
 
 /**
  * Finally, we will attach the application instance to a HTML element with

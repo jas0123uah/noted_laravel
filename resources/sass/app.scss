@@ -65,3 +65,34 @@
 .ql-disabled{
   border: 0 !important;
 }
+.emulate-link:hover{
+  text-decoration: underline;
+}
+.study-wrapper{
+  height: 100% !important;
+}
+.custom-close-button {
+    color: blue;
+    /* Add more styles as needed */
+}
+// .x-button {
+//     position: relative;
+//     top: -2rem;
+//     background: transparent;
+//     border: none;
+//     font-weight: bold;
+//     left: 3rem;
+// }
+.x-button {
+    left: 94%;
+    top: 2em;
+    z-index: 80;
+    background: transparent;
+    border: 0;
+}
+.x-color{
+  color: #664d03;
+}
+.invisible{
+  visibility: none;
+}

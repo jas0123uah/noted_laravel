@@ -29,7 +29,5 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-console.log(router, "ROUTER");
-console.log(router.getRoutes());
 
 export default router;

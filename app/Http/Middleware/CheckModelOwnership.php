@@ -16,7 +16,6 @@ class CheckModelOwnership
      */
     public function handle(Request $request, Closure $next, string $model_class): Response
     {
-        Log::info("dhgdfhd");
         $model_class_name = strtoupper(array_slice(explode('\\', $model_class), -1)[0]);
 
         $model_id = $request->route()->parameter(strtolower($model_class_name));

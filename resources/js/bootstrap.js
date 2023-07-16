@@ -12,6 +12,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(function(config){
+    // Retrieve the access token from storage
         const access_token = getAccessTokenFromCookie();
         config.headers.Authorization = `Bearer ${access_token}`;
 
@@ -19,8 +20,6 @@ axios.interceptors.request.use(function(config){
 
 
 })
-// Retrieve the access token from storage
-//const access_token = localStorage.getItem('access_token');
 window.axios = axios;
 
 

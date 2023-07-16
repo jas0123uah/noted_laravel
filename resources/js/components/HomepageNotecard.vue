@@ -1,6 +1,4 @@
 <template>
-    <!-- {{ item }} -->
-    <!-- {{ stack_title }} -->
     <div class="d-flex flex-column">
         <div :key="item.id" class="card bg-white" style="width: 18rem; height: 9rem; display: flex; position: static; align-items: center;">
             <i v-if="can_be_deleted" @click="confirmDelete(item)" class="fa-solid fa-circle-minus" style="margin-top: 0.25rem; margin-right: 0.5rem; align-self: baseline;"></i>

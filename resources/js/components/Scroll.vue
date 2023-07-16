@@ -8,17 +8,13 @@
     <div name="scroll" style="max-width: 30em; overflow-x: scroll; white-space: nowrap;"  class="d-flex align-items-center" :class="{'flex-column':!items.length, 'gap-3': !items.length, 'gap-5': items.length}" ref="scrollContainer">
         <span v-if="!items.length"> No stacks. Create one!</span>
         <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus"></i>
-        <!-- <span>{{ Object.keys(items).length  }}</span> -->
         <template v-if="is_stack">
             <homepage-notecard v-for="(item) in items" :stack_title="item.name" style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></homepage-notecard>
         </template>
         <template v-else>
             <homepage-notecard v-for="(item) in items"  style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></homepage-notecard>
-
         </template>
     </div>
-
-
 </template>
 <script>
 import _ from 'lodash';
@@ -39,9 +35,7 @@ export default {
             type: Boolean,
             default: false
         }
-
     },
-    //props: ['items'],
     data() {
         return {
             selected_notecard_store: useSelectednotecardStore(),
@@ -89,8 +83,6 @@ export default {
                     }
                 }
             );
-        
-
         },
         selectNotecard(notecard){
             if(this.unsaved_changes){
@@ -110,9 +102,7 @@ export default {
             try {
                 let res = await window.axios.post('/stacks', {name: stack_name});
                 this.stack_store.repsertStack(res.data.data);
-                this.response_message_store.setResponseMessage(res.data.message);
-
-                
+                this.response_message_store.setResponseMessage(res.data.message);              
             } catch (error) {
                 console.error(error);
                 if (error.response.status > 400) {
@@ -126,12 +116,8 @@ export default {
                     });
                 
                 }
-
-                
             }
-
         }
-
     },
 };
 </script>

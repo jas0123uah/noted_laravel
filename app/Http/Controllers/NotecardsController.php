@@ -4,15 +4,10 @@ namespace App\Http\Controllers;
 use App\Models\Notecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 
 class NotecardsController extends Controller
 {
-    public function index() {
-        Log::info("logg");
-    }
-
     /**
      * Store a newly created resource in storage.
      */

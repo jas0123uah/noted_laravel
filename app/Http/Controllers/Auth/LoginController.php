@@ -6,31 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-//use Illuminate\Foundation\Auth\User;
 use App\Models\User;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    // public function authenticated(Request $request, $user) {
-    //     Log::info('Making token');
-    //     $token = $user-> createToken('API Token')->plainTextToken;
-    //     Log::info($token);
-    //     $cookie = cookie('access_token', $token, 60*24*7, null, null, false, true);
-    //     // return response()->json([
-    //     //     'token' => $token
-    //     // ]);
-    //     $responseData = [
-    //     'access_token' => $token,
-    // ];
-
-    // return redirect('/home')->with($responseData);
-    //     //return redirect('/home')->cookie($cookie);
-        
-    // }
     /*
     |--------------------------------------------------------------------------
     | Login Controller

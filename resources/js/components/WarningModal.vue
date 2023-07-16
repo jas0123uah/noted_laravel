@@ -13,7 +13,6 @@
                         <button v-if="modal_function" type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click="modal_store.setModal({}); modal_function(this.input);">Confirm</button>
                         <button type="button" class="button btn btn-secondary" data-bs-dismiss="modal" @click=" modal_store.setModal({});">Close</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -27,7 +26,6 @@ export default {
     props: {
         warning_message: {
             type: String,
-            //required: true
         },
         title: {
             type: String,
@@ -78,5 +76,4 @@ export default {
     border-radius: 4px;
     padding: 20px;
     }
-
 </style>

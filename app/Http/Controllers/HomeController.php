@@ -28,8 +28,6 @@ class HomeController extends Controller
     {
         Log::info('Home controller');
         $user = Auth::user();
-        //$token = $request->user()->createToken($request->token_name);
-       // $token = $request->user()->createToken($request->token_name);
         $token_name = 'API Token'; // Set a default token name if the request parameter is not available
 
         $token = $request->user()->createToken($token_name);

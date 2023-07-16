@@ -6,8 +6,7 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        LOOK: {{ message }}
-                    </div>
+                        I'm an example component.                    </div>
                 </div>
             </div>
         </div>
@@ -19,11 +18,6 @@
         mounted() {
             console.log('Component mounted.')
         },
-        data(){
-            return {
-                message: "Test message"
-            }
-        }
     
     }
 </script>

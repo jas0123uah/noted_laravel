@@ -1,7 +1,5 @@
-<template>
-  
+<template>  
     <div class=" d-flex flex-column gap-5 gap-md-3 align-items-center">
-        <!-- {{ stack }} -->
         <input type="text" v-if="stack" v-model="stack.name" @input="debounceEditStackName" placeholder="Stack name..." class="form-control input-group">
         <div class="align-self-center">
           <scroll
@@ -24,11 +22,6 @@
           <span class="text-success">{{ response_message }}</span>
         </div>
       </div>
-        
-        <!-- <span v-if="selected_notecard">{{ selected_notecard }}</span> -->
-
-
-
     </div>
 </template>
 
@@ -39,7 +32,6 @@ import { useNotecardsStore } from '@/stores/notecards'
 import { useModalStore } from '@/stores/modal'
 import { useResponsemessageStore } from '@/stores/response_message'
 import _ from 'lodash';
-
 import { storeToRefs } from 'pinia'
 
 export default {
@@ -111,11 +103,8 @@ export default {
               </ul>
             `
             });
-            
           }
-          
         }
-        
       }
     },
     async editStackName(){

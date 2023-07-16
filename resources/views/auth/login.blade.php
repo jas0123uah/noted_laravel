@@ -5,7 +5,6 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card border-0">
-                <!-- <div class="card-header">{{ __('Login') }}</div> -->
 
                 <div class="card-body">
                     <p class="text-center">Learn something today.</p>

@@ -25,8 +25,6 @@ class CheckModelOwnership
         }
         // Retrieve the model using the provided model class and ID
         $model = $model_class::find($model_id);
-        Log::debug(json_encode($model));
-        Log::debug(json_encode(auth()->id()));
 
         // Check if the model exists and if the authenticated user is associated with it
         if (!$model || $model->user_id !== auth()->id()) {

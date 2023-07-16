@@ -1,18 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Roboto:wght@100&family=Water+Brush&display=swap" rel="stylesheet">
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -24,7 +24,7 @@
                 const demoLink = document.getElementById('demo-link');
 
                 // Add a click event listener to the demo link
-                demoLink.addEventListener('click', function(event) {
+                demoLink?.addEventListener('click', function(event) {
                     event.preventDefault(); // Prevent the default link behavior
 
                     // Create a new form element
@@ -41,6 +41,15 @@
                     // Append the CSRF token input field to the form
                     form.appendChild(csrfToken);
 
+                    // Create a hidden input field for the _method parameter (POST request emulation)
+                    const methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.value = 'POST';
+
+                    // Append the method input field to the form
+                    form.appendChild(methodField);
+
                     // Append the form to the document body
                     document.body.appendChild(form);
 
@@ -52,7 +61,7 @@
     @endsection
 </head>
 <body>
-    <div id="app">
+    <div id="nav">
         <nav class="navbar navbar-expand-md navbar-dark bg-black shadow-sm">
             <div class="container">
                 <a class="text-white navbar-brand roboto fw-bolder" href="{{ url('/') }}">
@@ -72,18 +81,6 @@
                     <ul class="navbar-nav ms-auto align-items-center d-flex flex-row justify-content-evenly">
                         <!-- Authentication Links -->
                         @guest
-                            <!-- @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif -->
-                            <!-- Testing -->
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{ route('about') }}">{{ __('About') }}</a>
                             </li>
@@ -91,12 +88,11 @@
                                 <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a id="demo-link" class="nav-link text-white" href="#">{{ __('Demo') }}</a>
+                                <a id="demo-link" class="nav-link text-white" href="{{ route('demo') }}">{{ __('Demo') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>
                             </li>
-                            <!-- End Testing -->
                         @else
                             <li class="d-flex gap-5">
                                 <a href="{{ route('about') }}" class="text-decoration-none hover-underline-animation">About</a>
@@ -116,5 +112,8 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Additional Scripts -->
+    @yield('scripts')
 </body>
 </html>

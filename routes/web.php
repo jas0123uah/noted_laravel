@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,5 +30,10 @@ Route::get('/email/verify/{id}/{hash}', [
     'uses' => 'App\Http\Controllers\Auth\VerificationController@verify',
 ]);
 
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+})->middleware(['auth'])->name('verification.send');
+
 Route::get('/unsubscribe/{subscription_token}', 'App\Http\Controllers\UnsubscribeController@unsubscribe')->name('unsubscribe');
 Route::post('/demo', 'App\Http\Controllers\Auth\LoginController@demo')->name('demo');
+Route::get('/stacks/{stack_id}/study/', [App\Http\Controllers\StacksController::class, 'study'])->middleware(['auth:sanctum', 'auth']);

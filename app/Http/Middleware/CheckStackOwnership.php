@@ -17,7 +17,6 @@ class CheckStackOwnership
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::info("checking stack");
         $stack_id = $request["stack_id"];
         if(!$stack_id){
             //Our validator will return the message saying we need a stack

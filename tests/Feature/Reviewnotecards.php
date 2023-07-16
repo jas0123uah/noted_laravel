@@ -145,7 +145,7 @@ class Reviewnotecards extends TestCase
             ])->json();
 
         }
-        Auth::logout();
+        $this->resetAuth();
 
         $response = $this->get("api/reviewnotecards/{$subscribed_and_verified["user_id"]}");
         $response->assertRedirect('/login');
@@ -182,7 +182,7 @@ class Reviewnotecards extends TestCase
             ])->json();
 
         }
-        Auth::logout();
+        $this->resetAuth();
         //Can't get someone elses review notecards
         $response = $this->actingAs($other_user)->get("api/reviewnotecards/{$subscribed_and_verified["user_id"]}")->json();
         $this->assertEquals([

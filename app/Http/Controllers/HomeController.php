@@ -26,7 +26,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        Log::info('Home controller');
         $user = Auth::user();
         $token_name = 'API Token'; // Set a default token name if the request parameter is not available
 

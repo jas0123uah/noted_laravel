@@ -20,11 +20,12 @@ class ReviewnotecardsController extends Controller
         $start_of_day = Carbon::today()->startOfDay();
         $end_of_day = Carbon::today()->endOfDay();
         //
-        $review_notecards = Reviewnotecard::where('user_id', Auth::id())
+        $user = User::find(Auth::id());
+        $user->deleteOldReviewNotecards();
+        $review_notecards = Reviewnotecard::with('notecard')->where('user_id', Auth::id())
             -> whereBetween('created_at', [$start_of_day, $end_of_day])
             -> get();
         //Fail-safe/lazy-loading 
-        $user = User::find(Auth::id());
         if(count($review_notecards) === 0){
             $review_notecards = $user->makeReviewNotecards();
             DB::beginTransaction();

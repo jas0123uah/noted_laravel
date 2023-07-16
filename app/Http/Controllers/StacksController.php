@@ -91,11 +91,14 @@ class StacksController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
-        return view('stacks', ["stack_id" => $id]);
+    public function edit(string $id){
+        return view('stacks');
     }
+    public function study(){
+        return view('study');
+    }
+
+
 
     /**
      * Update the specified resource in storage.

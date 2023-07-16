@@ -65,7 +65,6 @@ public function demo(Request $request) {
         $first_notecard = $stack->notecards->first();
         $stacks_and_first_notecard[$stack->name] = $first_notecard;
     }
-
     return view('home', compact('stacks_and_first_notecard', 'my_token'));
 }
 

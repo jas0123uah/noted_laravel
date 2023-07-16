@@ -14,7 +14,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //Use 
+        //Redirect to just get the user's info
+
+        return redirect()->action([UsersController::class, 'show'], ['user' => Auth::id()]);
     }
 
     /**

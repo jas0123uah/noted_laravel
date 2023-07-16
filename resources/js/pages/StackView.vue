@@ -19,7 +19,7 @@
       <div class="m-5 d-flex flex-column align-self-center">
         <div 
         style="min-width:263.5px;"
-         class=" d-flex gap-2  align-items-center align-self-center">
+        class=" d-flex gap-2  align-items-center align-self-center">
           <button @click="saveNoteCard" class="button btn btn-primary">Save</button>
           <span class="text-success">{{ response_message }}</span>
         </div>
@@ -34,7 +34,6 @@
 
 <script>
 import EditSelectedNotecard from '../components/EditSelectedNotecard.vue';
-import Scroll from '../components/Scroll.vue';
 import { useSelectednotecardStore } from '@/stores/selected_notecard'
 import { useNotecardsStore } from '@/stores/notecards'
 import { useModalStore } from '@/stores/modal'
@@ -42,8 +41,6 @@ import { useResponsemessageStore } from '@/stores/response_message'
 import _ from 'lodash';
 
 import { storeToRefs } from 'pinia'
-//const store = useSelectednotecardStore();
-//const { selected_notecard } = storeToRefs(store);
 
 export default {
   data() {
@@ -54,7 +51,6 @@ export default {
       modal_store: useModalStore(),
       loading: true,
       stack: null,
-      // selected_notecard: null,
     };
   },
   computed: {

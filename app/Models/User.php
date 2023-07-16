@@ -44,6 +44,11 @@ class User extends Authenticatable
             AND u.user_id = '{$this->user_id}'
     ");
     }
+    public function deleteOldReviewNotecards(){
+        //Reviewnotecard::where('created_at' < now()->startOfDay())->delete();
+        Reviewnotecard::where('created_at', '<', now()->startOfDay())->where('user_id', $this->user_id)->delete();
+
+    }
 
     /**
      * The attributes that are mass assignable.

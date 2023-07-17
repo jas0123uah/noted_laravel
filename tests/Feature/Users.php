@@ -159,7 +159,7 @@ class Users extends TestCase
             'email' => 'johnnydoe@example.com',
         ];
         
-        Auth::logout(); 
+        $this->resetAuth(); 
         
         //Ensure we are a guest
         $this->assertGuest();
@@ -250,7 +250,7 @@ class Users extends TestCase
         ];
 
         
-        Auth::logout();
+        $this->resetAuth();
         $response = $this->post('/register', $data);
 
         $response->assertSessionHasErrors([

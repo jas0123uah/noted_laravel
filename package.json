@@ -14,5 +14,14 @@
         "sass": "^1.56.1",
         "vite": "^4.0.0",
         "vue": "^3.2.36"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.0",
+        "@vueup/vue-quill": "^1.2.0",
+        "highlight.js": "^11.8.0",
+        "lodash": "^4.17.21",
+        "luxon": "^3.3.0",
+        "pinia": "^2.1.4",
+        "vue-router": "^4.2.4"
     }
 }

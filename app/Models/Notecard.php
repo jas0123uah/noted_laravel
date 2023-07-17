@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 class Notecard extends Model
 {
     use HasFactory;
@@ -24,17 +25,21 @@ class Notecard extends Model
     public function stack(){
         return $this->belongsTo(Stack::class);
     }
-    public function review_notecard(){
-        return $this->belongsTo(Reviewnotecard::class);
+
+
+    public function reviewnotecards(){
+            return $this->hasMany(Reviewnotecard::class, 'notecard_id');
     }
+
 
     public function calculateNextRepetition()
     {
         if ($this->repetition == 1) {
             $this->next_repetition = now()->addDays(6)->startOfDay();
         } else if($this->repetition > 1) {
-            $interval = $this->next_repetition->diffInDays();
-            $this->next_repetition = $this->next_repetition->addDays($interval * $this->e_factor)->startOfDay();
+            $next_repetition_date = Carbon::parse($this->next_repetition);
+            $interval = $next_repetition_date->diffInDays();
+            $this->next_repetition = $next_repetition_date->addDays($interval * $this->e_factor)->startOfDay();
         }
     }
 

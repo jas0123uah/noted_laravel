@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Reviewnotecard;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Mail;
 use App\Mail\NotedMailable;
 use App\Models\Notecard;
@@ -28,6 +29,7 @@ class MailController extends Controller
     $errors = [];
 
     foreach ($grouped_notecards as $user_id => $notecards) {
+        $user = User::find($user_id);
         $example_notecard = $notecards[0];
         $users_review_notecards =[];
         foreach ($notecards as $notecard) {
@@ -52,10 +54,16 @@ class MailController extends Controller
 
         try {
             // Send the daily stack email if appropriate
+            $data = [
+                'first_name' => $user->first_name,
+                'today' => now()->format('F jS'),
+
+            ];
             if(config('app.env') === 'testing'){
                 Log::info("Not sending daily stack email to {$example_notecard->email} in testing environment.");
             }
             else{
+                Mail::to($example_notecard->email)->send(new NotedMailable($data));
                 Log::info("Daily stack email sent to {$example_notecard->email}.");
             }
 

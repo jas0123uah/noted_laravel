@@ -84,3 +84,10 @@
 .invisible{
   visibility: none;
 }
+
+@media (min-width: 992px) {
+    .card-lg div {
+        width: 33rem !important;
+        height: 19rem !important;
+    }
+}

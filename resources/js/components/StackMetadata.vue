@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { useResponsemessageStore } from '@/stores/response_message'
 export default {
   props: {
     'stackTitle': {
@@ -26,6 +27,8 @@ export default {
   },
   data() {
     return {
+      response_message_store: useResponsemessageStore(),
+      
     };
   },
   created() {
@@ -33,9 +36,11 @@ export default {
   methods: {
     editStack() {
       this.$router.push(`/stacks/${this.stackId}/edit`);
+      this.response_message_store.setResponseMessage({});
     },
     studyStack() {
       this.$router.push(`/stacks/${this.stackId}/study`);
+      this.response_message_store.setResponseMessage({});
     },
   },
 };

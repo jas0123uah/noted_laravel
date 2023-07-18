@@ -2,7 +2,7 @@
     <div class="d-flex flex-column">
         <div :key="item.id" class="card bg-white" style="width: 18rem; height: 9rem; display: flex; position: static; align-items: center;">
             <i v-if="can_be_deleted" @click="confirmDelete(item)" class="fa-solid fa-circle-minus" style="margin-top: 0.25rem; margin-right: 0.5rem; align-self: baseline;"></i>
-            <div class="card-body d-flex align-items-center" style="margin-bottom: 14.4px;">
+            <div class=" justify-content-center card-body d-flex align-items-center" style="margin-bottom: 14.4px;">
                 <h5 v-html="item?.original?.front || item?.front || item.name " class="card-title roboto fw-bold"></h5>
             </div>
         </div>

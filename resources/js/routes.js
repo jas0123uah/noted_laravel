@@ -19,6 +19,12 @@ const routes = [
         name: "home",
         component: AllStacks,
     },
+    {
+        path: '/demo/',
+        name: "demo",
+        redirect: '/home/'
+
+    }
 ];
 
 const router = createRouter({

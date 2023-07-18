@@ -18,7 +18,6 @@ import { createPinia } from "pinia";
  */
 
 const app = createApp({});
-app.use(MotionPlugin);
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);

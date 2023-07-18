@@ -9,7 +9,7 @@
         input_placeholder="Stack name..."
         :title="modal.title" />
     
-        <div v-if="user.show_confirm_email" style="position: relative;">
+        <div v-if="user.show_confirm_email && user.email !=='demo@example.com'" style="position: relative;">
             <button @click="closeConfirmEmail" type="button" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -43,9 +43,17 @@
         <div v-if="loading_review" class="spinner-border" role="status">
         </div>
         <div class="d-flex flex-column align-items-center" v-else-if="review_notecards?.length">
-            <h5>Review notecards for {{ review_stack_date }} </h5>
-            <homepage-notecard :item="review_notecards[0].notecard" :can_be_deleted="false" ></homepage-notecard>
-            <stack-metadata :stack-title="review_stack_title" stack-id="daily-stack"  :study_only="true"></stack-metadata>
+            <div class="d-flex gap-5">
+                <i v-if="stacks?.length<=1" style="line-height: normal; visibility: hidden;" class="fa-solid fa-2xl fa-circle-plus"></i>
+                <div>
+                    <h5>Review notecards for {{ review_stack_date }} </h5>
+                    <div class="d-flex gap-5">
+                        <homepage-notecard :item="review_notecards[0].notecard" :can_be_deleted="false" ></homepage-notecard>
+                    </div>
+                    <stack-metadata :stack-title="review_stack_title" stack-id="daily-stack"  :study_only="true"></stack-metadata>
+                </div>
+
+            </div>
         </div>
         <h5 v-else>No review notecards for {{ review_stack_date }}</h5>
     </div>
@@ -115,7 +123,8 @@ export default {
             return this.response_message_store.getResponseMessage
         },
         review_stack_date(){
-            if(this.review_notecards?.length)  return new DateTime(this.review_notecards[0].created_at).toLocaleString({ month: 'long', day: 'numeric' })
+            if(this?.review_notecards[0]) return new DateTime(this.review_notecards[0].created_at).toLocaleString({ month: 'long', day: 'numeric' })
+            return new DateTime(new Date()).toLocaleString({ month: 'long', day: 'numeric' })
         },
         review_stack_title(){
             return `${this.review_stack_date} Review`;

@@ -52,7 +52,6 @@ foreach ($models as $model_class => $model_plural) {
     });
 }
 // routes/api.php
-
 Route::post('/reviewnotecards', [App\Http\Controllers\MailController::class, 'index'])->middleware('auth');
 Route::get('/reviewnotecards/{user_id}/', [App\Http\Controllers\ReviewnotecardsController::class, 'show'])->middleware([ 'auth:sanctum', 'auth',  'checkRequestedReviewNotecards']);
 Route::get('/access-token', function () {

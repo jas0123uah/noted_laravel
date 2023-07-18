@@ -6,3 +6,81 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+.button{
+    background-color: $noted-purple !important;
+    color: white;
+    
+}
+.link-button:active, .link-button:hover{
+    background-color: $noted-purple !important;
+}
+.roboto{
+    font-family: 'Roboto', sans-serif;
+}
+.width-fit-content{
+    width: fit-content;
+}
+.hover-underline-animation {
+  display: inline-block;
+  position: relative;
+  color: #fff;
+}
+
+.hover-underline-animation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  transform-origin: bottom right;
+  transition: transform 0.5s ease-out;
+}
+
+.hover-underline-animation:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+.ignore-subseq-p + p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.hide-toolbar .ql-toolbar {
+    padding: 0 !important;
+    border-bottom: hidden !important;
+    border-color: transparent !important;
+    span {
+        display: none;
+    }
+}
+.animated {
+	transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card.current {
+	pointer-events: auto;
+}
+.ql-disabled{
+  border: 0 !important;
+}
+.emulate-link:hover{
+  text-decoration: underline;
+}
+.study-wrapper{
+  height: 100% !important;
+}
+.x-button {
+    left: 94%;
+    top: 2em;
+    z-index: 80;
+    background: transparent;
+    border: 0;
+}
+.x-color{
+  color: #664d03;
+}
+.invisible{
+  visibility: none;
+}

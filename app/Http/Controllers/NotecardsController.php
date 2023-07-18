@@ -5,9 +5,9 @@ use App\Models\Notecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class NotecardsController extends Controller
 {
-
     /**
      * Store a newly created resource in storage.
      */

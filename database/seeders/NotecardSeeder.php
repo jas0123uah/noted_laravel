@@ -16,8 +16,8 @@ class NotecardSeeder extends Seeder
             [
                 'user_id' => 1, // User ID of John Doe
                 'stack_id' => 1, // Stack ID of Stack 1
-                'front' => 'Front of Notecard 1',
-                'back' => 'Back of Notecard 1',
+                'front' => '<p>Front of Notecard 1</p>',
+                'back' => '<p>Back of Notecard 1</p>',
                 'e_factor' => 2.5,
                 'repetition' => 0,
                 'next_repetition' => now()->subDays(7),
@@ -27,8 +27,8 @@ class NotecardSeeder extends Seeder
             [
                 'user_id' => 2, // User ID of Jane Smith
                 'stack_id' => 2, // Stack ID of Stack 2
-                'front' => 'Front of Notecard 2',
-                'back' => 'Back of Notecard 2',
+                'front' => '<p>Front of Notecard 2</p>',
+                'back' => '<p>Back of Notecard 2</p>',
                 'e_factor' => 2.5,
                 'repetition' => 0,
                 'next_repetition' => now()->subDays(7),

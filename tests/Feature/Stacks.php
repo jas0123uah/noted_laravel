@@ -156,7 +156,7 @@ class Stacks extends TestCase
         ];
         //create a stack
         $stack_id = $this->actingAs($user)->post('/api/stacks/', $stack)->json()["data"]["stack_id"];
-        Auth::logout();
+        $this->resetAuth();
         
         
         //Create user for myself

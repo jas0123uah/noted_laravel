@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Notecard;
 use App\Models\Stack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,10 +11,37 @@ class StacksController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-        return view('test');
+{
+    $user = Auth::user();
+    $stacks = $user->stacks()->with('notecards')->get();
+    $stacks_and_first_notecard = [];
+
+    foreach ($stacks as $stack) {
+        $first_notecard = $stack->notecards->first();
+
+        if (!$first_notecard) {
+            $first_notecard = new Notecard([
+                'front' => 'Stack is empty',
+                'back' => 'Stack is empty',
+                'stack_id' => $stack->stack_id,
+            ]);
+        }
+
+        $stacks_and_first_notecard[] = [
+            'name' => $stack->name,
+            'stack_id' => $stack->stack_id,
+            'created_at' => $stack->created_at,
+            'updated_at' => $stack->updated_at,
+            'user_id' => $stack->user_id,
+            'notecards' => [$first_notecard],
+        ];
     }
+
+    return response()->json([
+        'data' => $stacks_and_first_notecard
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,6 +79,7 @@ class StacksController extends Controller
      */
     public function show(string $id)
     {
+        Log::info("Logging");
         $stack = Stack::with('notecards')->findOrFail($id);
 
         return response()->json([
@@ -62,10 +91,14 @@ class StacksController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
+    public function edit(string $id){
+        return view('stacks');
     }
+    public function study(){
+        return view('study');
+    }
+
+
 
     /**
      * Update the specified resource in storage.

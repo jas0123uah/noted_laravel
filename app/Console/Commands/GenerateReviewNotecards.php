@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\MailController;
 
 class GenerateReviewNotecards extends Command
 {
@@ -18,13 +19,16 @@ class GenerateReviewNotecards extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Creates review notecards and generates daily email to notify users of their review notecards.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        //
+        $mailController = new MailController();
+        $mailController->index();
+
+        $this->info('Review notecards generated and daily emails sent.');
     }
 }

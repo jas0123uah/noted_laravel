@@ -15,9 +15,11 @@ class Reviewnotecard extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
     public function notecard(){
-        return $this->hasOne(Notecard::class);
+        return $this->belongsTo(Notecard::class, 'notecard_id');
     }
+
     public function stack(){
         return $this->belongsTo(Stack::class);
     }

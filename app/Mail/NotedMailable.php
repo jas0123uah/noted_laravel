@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class NotedMailable extends Mailable
 {
@@ -38,6 +39,8 @@ class NotedMailable extends Mailable
      */
     public function content(): Content
     {
+        Log::info(41);
+        Log::info($this->data);
         return new Content(
             view: 'emails.daily_stack_email',
             with: [

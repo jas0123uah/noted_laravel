@@ -5,6 +5,7 @@
         v-if="modal.message" 
         :warning_message="modal.message" 
         :title="modal.type" />
+      <h2 v-if="stack_title">{{ stack_title }}</h2>
       <study-notecards :notecards="notecards"></study-notecards>
     </div>
 </template>
@@ -13,6 +14,7 @@ import StudyNotecards from '../components/StudyNotecards.vue';
 import _ from 'lodash';
 import { useModalStore } from '@/stores/modal'
 import { useNotecardsStore } from '@/stores/notecards'
+import { useStacksStore } from '@/stores/stacks'
 import { useUserStore } from '@/stores/user';
 
 
@@ -23,17 +25,19 @@ export default {
             notecards: [],
             modal_store: useModalStore(), 
             notecards_store: useNotecardsStore(),
+            stack_title: null,
             user_store: useUserStore(),  
         };
     },
     computed:{
         modal(){
             return this.modal_store.getModal
-        },  
+        },
     },
     async mounted(){
         try {
           if(this.$route.params.stack_id === 'daily-stack'){
+            this.stack_title = "Review Stack"
             //May happen if the user navigates directly to daily stack via URL bar
             if(!this.notecards_store.getNotecards.length){
               let user = (await window.axios.get('/api/users/')).data;
@@ -52,6 +56,7 @@ export default {
           }
           else {
             let res = await window.axios.get(`/api/stacks/${this.$route.params.stack_id}`);
+            this.stack_title = res.data.data.name;
             this.notecards = res.data.data.notecards;
           }
         } catch (error) {

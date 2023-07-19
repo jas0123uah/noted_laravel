@@ -24,6 +24,7 @@
                     <notecard
                         class="mb-3 mb-md-0 card-lg"
                         :can_be_deleted="{{ json_encode(false) }}"
+                        :allow_truncate="false"
                         :item="{{ json_encode(['front' => 'JavaScript is statically typed.', ]) }}"
                     ></notecard>
                     <div>

@@ -26,6 +26,7 @@
         </div>
       </transition>
     </div>
+    <span :class="{'invisible': !show_message}" class="mb-3">Tap or click the notecard to see the {{ show_front ? 'back' : 'front' }}. </span> 
     <template v-if="$route.params.stack_id === 'daily-stack' && new Date(this.notecards[current_card_index]?.next_repetition) < new Date(start_of_day)">
         <study-buttons @click="loading = true" :disabled="loading" @getNextCard="payload => {getNext(); loading = false;}" :notecard_id="this.notecards[current_card_index]?.notecard_id"></study-buttons>
         <span @click="displayDefs" class="align-self-start emulate-link fw-bold">Definitions</span>
@@ -52,6 +53,7 @@ export default {
       current_card_index: 0,
       show_front: true,
       loading: false,
+      has_seen_back: false,
       modal_store: useModalStore(),
       study_button_defs:`<ul style="list-style-type:none; padding:0; margin:0;">
         <li>😵‍💫 - Blackout. Complete failure to recall the information.</li>
@@ -74,6 +76,10 @@ export default {
       let today = new Date();
       today = today.setUTCHours(0,0,0,0);
       return new Date(today);
+    },
+    show_message(){
+      return !(this.has_seen_back && this.show_front)
+
     }
   },
   methods: {
@@ -95,6 +101,7 @@ export default {
     },
     toggleNotecard() {
       this.show_front = !this.show_front;
+      if(!this.show_front) this.has_seen_back = true;
     },
     displayDefs(){
         this.modal_store.setModal({

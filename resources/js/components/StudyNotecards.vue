@@ -5,6 +5,12 @@
     :modal_function="modal.modal_function"
     :warning_message="modal.message" 
     :title="modal.type" />
+    <div v-if="loading" class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    
   <div class="study-wrapper">
     <div @click="toggleNotecard"  class="notecard-container">
       <transition name="notecard-transition">
@@ -21,7 +27,7 @@
       </transition>
     </div>
     <template v-if="$route.params.stack_id === 'daily-stack' && new Date(this.notecards[current_card_index]?.next_repetition) < new Date(start_of_day)">
-        <study-buttons @getNextCard="payload => getNext()" :notecard_id="this.notecards[current_card_index]?.notecard_id"></study-buttons>
+        <study-buttons @click="loading = true" :disabled="loading" @getNextCard="payload => {getNext(); loading = false;}" :notecard_id="this.notecards[current_card_index]?.notecard_id"></study-buttons>
         <span @click="displayDefs" class="align-self-start emulate-link fw-bold">Definitions</span>
     </template>
     <div class="swipe-controls">
@@ -45,6 +51,7 @@ export default {
     return {
       current_card_index: 0,
       show_front: true,
+      loading: false,
       modal_store: useModalStore(),
       study_button_defs:`<ul style="list-style-type:none; padding:0; margin:0;">
         <li>😵‍💫 - Blackout. Complete failure to recall the information.</li>

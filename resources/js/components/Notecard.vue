@@ -32,6 +32,10 @@ export default {
         stack_title: {
             type: String,
             default: ''
+        },
+        allow_truncate: {
+            type: Boolean,
+            default: true
         }
     },
     data(){
@@ -66,7 +70,7 @@ export default {
                 this.item?.front ||  //The text on the front of the notecard in cases where the notecard is not selected
                 this.stacks.find(s => s.stack_id == this.item.stack_id)?.notecards?.[0]?.front || //The first notecard in the stack
                 "<p>Stack is empty</p>"
-            string =_.truncate(string, {length: 20});
+            if(this.allow_truncate) string =_.truncate(string, {length: 20});
             if(!string.endsWith("</p>")) string+="</p>"
             return string;
             

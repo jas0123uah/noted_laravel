@@ -72,7 +72,6 @@ export default {
     },
     methods: {
         addNotecard(){
-            console.log("Adding?")
             if(this.unsaved_changes){
                 this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
                 return
@@ -89,9 +88,6 @@ export default {
             );
         },
         selectNotecard(notecard){
-            console.log("Selecting?")
-            console.log({notecard,
-            selected: this.selected_notecard})
             if((this.selected_notecard?.notecard_id !== notecard.notecard_id) && this.unsaved_changes){
                 this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
                 return

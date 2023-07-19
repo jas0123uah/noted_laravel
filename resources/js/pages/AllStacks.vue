@@ -48,7 +48,7 @@
                 <div>
                     <h5>Review notecards for {{ review_stack_date }} </h5>
                     <div class="d-flex gap-5">
-                        <homepage-notecard :item="review_notecards[0].notecard" :can_be_deleted="false" ></homepage-notecard>
+                        <notecard :item="review_notecards[0].notecard" :can_be_deleted="false" ></notecard>
                     </div>
                     <stack-metadata :stack-title="review_stack_title" stack-id="daily-stack"  :study_only="true"></stack-metadata>
                 </div>

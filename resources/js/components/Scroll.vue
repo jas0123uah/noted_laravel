@@ -9,10 +9,10 @@
         <span v-if="!items.length"> No {{ is_stack ? 'Stacks' : 'Notecards' }}. Create one!</span>
         <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus"></i>
         <template v-if="is_stack">
-            <homepage-notecard v-for="(item) in items" :stack_title="item.name" style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></homepage-notecard>
+            <notecard v-for="(item) in items" :stack_title="item.name" style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></notecard>
         </template>
         <template v-else>
-            <homepage-notecard v-for="(item) in items"  style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></homepage-notecard>
+            <notecard v-for="(item) in items"  style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></notecard>
         </template>
     </div>
 </template>
@@ -24,7 +24,7 @@ import { useModalStore } from '@/stores/modal'
 import { useStacksStore } from '@/stores/stacks'
 import { storeToRefs } from 'pinia'
 import WarningModal from '../components/WarningModal.vue';
-import HomepageNotecard from './HomepageNotecard.vue';
+import notecard from './Notecard.vue';
 export default {
     props: {
         items: {

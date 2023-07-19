@@ -3,7 +3,7 @@
         <div :key="item.id" @click="selected_notecard_store.setSelectedNotecard(item)" class="card bg-white" style="width: 18rem; height: 9rem; display: flex; position: static; align-items: center;">
             <i v-if="can_be_deleted" @click="confirmDelete(item)" class="fa-solid fa-circle-minus" style="margin-top: 0.25rem; margin-right: 0.5rem; align-self: baseline;"></i>
             <div class=" justify-content-center card-body d-flex align-items-center" style="margin-bottom: 14.4px;">
-                <h5 v-html="item?.original?.front || item?.front || item.name " class="card-title roboto fw-bold"></h5>
+                <h5 v-html="notecard_text" class="card-title roboto fw-bold"></h5>
             </div>
         </div>
         <stack-metadata v-if="stack_title" class="align-self-center" :stack-id="item.stack_id" :stack-title="stack_title"></stack-metadata>
@@ -46,10 +46,31 @@ export default {
     },
     computed:{
         modal(){
-            return this.modal_store.getModal
+            return this.modal_store.getModal;
         },
         selected_notecard(){
-            return this.selected_notecard_store.getSelectedNotecard
+            return this.selected_notecard_store.getSelectedNotecard;
+        },
+        stacks(){
+            return this.stacks_store.getStacks;
+        },
+        notecard_text(){
+            /*We use this component to represet both a single notecard as well as the first notecard in a stack on our home page
+            The text we display should be either:
+                1.The text from the passed in item if it's a notecard
+                2. The text from the first notecard in the stack
+                3. Text that reads Empty stack 
+             */ 
+            let string = 
+                this.item?.original?.front || //The text on the front of the notecard before editing 
+                this.item?.front ||  //The text on the front of the notecard in cases where the notecard is not selected
+                this.stacks.find(s => s.stack_id == this.item.stack_id)?.notecards?.[0]?.front || //The first notecard in the stack
+                "<p>Stack is empty</p>"
+            string =_.truncate(string, {length: 20});
+            if(!string.endsWith("</p>")) string+="</p>"
+            return string;
+            
+
         }
     },
     methods: {

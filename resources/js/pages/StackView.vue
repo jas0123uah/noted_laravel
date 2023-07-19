@@ -21,7 +21,7 @@
       <div 
       style="min-width:263.5px;"
       class=" d-flex gap-2  align-items-center align-self-center">
-        <button @click="saveNoteCard" class="button btn btn-primary">Save</button>
+        <button @click="saveNoteCard" :disabled="!unsaved_changes" class="button btn btn-primary">Save</button>
         <span class="text-success">{{ response_message }}</span>
       </div>
     </div>
@@ -61,6 +61,13 @@ export default {
     response_message(){
       return this.response_message_store.getResponseMessage
     },
+    unsaved_changes() {
+        if(this.selected_notecard_store){
+
+            let selected_notecard = this.selected_notecard_store.getSelectedNotecard;
+            return selected_notecard && !_.isEqual(_.omit(selected_notecard, 'original'), _.cloneDeep(selected_notecard.original));
+        }
+    },
     
   },
   created() {
@@ -94,6 +101,7 @@ export default {
         });
     },
     async saveNoteCard(){
+      this.loading = true;
       if (this.selected_notecard.notecard_id) {
         let res = await window.axios.put(`/api/notecards/${this.selected_notecard.notecard_id}`, this.selected_notecard);
         this.selected_notecard_store.setSelectedNotecard(res.data.data);
@@ -107,11 +115,13 @@ export default {
             stack_id: this.$route.params.stack_id
           });
           this.notecards_store.repsertNotecard(res.data.data);
+          this.selected_notecard_store.setSelectedNotecard(res.data.data);
           this.fetchStack();
           this.response_message_store.setResponseMessage(res.data.message);
           
         } catch (error) {
           console.error(error)
+          this.loading = false;
           if (error.response.status >400) {
             this.modal_store.setModal({
               type: 'ERROR',
@@ -124,6 +134,7 @@ export default {
           }
         }
       }
+      this.loading = false;
     },
     async editStackName(){
       try {

@@ -20,43 +20,50 @@
     @section('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Find the demo link element by its ID
-                const demoLink = document.getElementById('demo-link');
+    // Find the demo link element by its ID
+    const demoLink = document.getElementById('demo-link');
 
-                // Add a click event listener to the demo link
-                demoLink?.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent the default link behavior
+    // Add a click event listener to the demo link
+    demoLink?.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default link behavior
 
-                    // Create a new form element
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '{{ route('demo') }}'; // Replace with your demo login route
+        // Create a new form element
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('demo') }}'; // Replace with your demo login route
 
-                    // Create a CSRF token input field
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}'; // Add the CSRF token value
+        // Create a CSRF token input field
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}'; // Add the CSRF token value
 
-                    // Append the CSRF token input field to the form
-                    form.appendChild(csrfToken);
+        // Append the CSRF token input field to the form
+        form.appendChild(csrfToken);
 
-                    // Create a hidden input field for the _method parameter (POST request emulation)
-                    const methodField = document.createElement('input');
-                    methodField.type = 'hidden';
-                    methodField.name = '_method';
-                    methodField.value = 'POST';
+        // Create a hidden input field for the _method parameter (POST request emulation)
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'POST';
 
-                    // Append the method input field to the form
-                    form.appendChild(methodField);
+        // Append the method input field to the form
+        form.appendChild(methodField);
 
-                    // Append the form to the document body
-                    document.body.appendChild(form);
+        // Append the form to the document body
+        document.body.appendChild(form);
 
-                    // Submit the form
-                    form.submit();
-                });
-            });
+        // Submit the form
+        form.submit();
+
+        // Update the URL after a short delay
+        setTimeout(function() {
+            window.history.pushState({}, '', '/home');
+        }, 100);
+    });
+});
+
+
         </script>
     @endsection
 </head>
@@ -88,7 +95,7 @@
                                 <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a id="demo-link" class="nav-link text-white" href="{{ route('demo') }}">{{ __('Demo') }}</a>
+                                <span id="demo-link" class="nav-link text-white" href="#">{{ __('Demo') }}</span>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>

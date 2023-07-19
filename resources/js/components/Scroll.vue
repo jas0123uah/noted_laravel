@@ -6,7 +6,7 @@
     :warning_message="modal.message || warning_message" 
     :title="modal.type || 'WARNING'" />
     <div name="scroll" style="max-width: 30em; overflow-x: scroll; white-space: nowrap;"  class="d-flex align-items-center" :class="{'flex-column':!items.length, 'gap-3': !items.length, 'gap-5': items.length}" ref="scrollContainer">
-        <span v-if="!items.length"> No stacks. Create one!</span>
+        <span v-if="!items.length"> No {{ is_stack ? 'Stacks' : 'Notecards' }}. Create one!</span>
         <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus"></i>
         <template v-if="is_stack">
             <homepage-notecard v-for="(item) in items" :stack_title="item.name" style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></homepage-notecard>
@@ -57,18 +57,22 @@ export default {
             }
         },
         modal(){
-            return this.modal_store.getModal
+            return this.modal_store.getModal;
         },
         stacks(){
-            return this.stack_store.getStacks
+            return this.stack_store.getStacks;
         },
         response_message(){
-            return this.response_message_store.getResponseMessage
+            return this.response_message_store.getResponseMessage;
         },
+        selected_notecard(){
+            return this.selected_notecard_store.getSelectedNotecard;
+        }
         
     },
     methods: {
         addNotecard(){
+            console.log("Adding?")
             if(this.unsaved_changes){
                 this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
                 return
@@ -85,7 +89,10 @@ export default {
             );
         },
         selectNotecard(notecard){
-            if(this.unsaved_changes){
+            console.log("Selecting?")
+            console.log({notecard,
+            selected: this.selected_notecard})
+            if((this.selected_notecard?.notecard_id !== notecard.notecard_id) && this.unsaved_changes){
                 this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
                 return
             }

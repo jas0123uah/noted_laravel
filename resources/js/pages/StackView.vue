@@ -1,28 +1,31 @@
-<template>  
-    <div class=" d-flex flex-column gap-5 gap-md-3 align-items-center">
-        <input type="text" v-if="stack" v-model="stack.name" @input="debounceEditStackName" placeholder="Stack name..." class="form-control input-group">
-        <div class="align-self-center">
-          <scroll
-          v-if="stack?.notecards?.length"
-          :items="notecards" >
-        </scroll>
-        </div>
-      <div v-if="!stack?.notecards.length">
-        <h5 class="mb-3 text-center">No notecards. Create some!</h5>
-        <div class="mb-3">
-          <edit-selected-notecard :add_padding="!!stack?.notecards.length" :key="selected_notecard.notecard_id" v-if="selected_notecard" :notecard="selected_notecard"></edit-selected-notecard>
-        </div>
+<template>
+  <div v-if="loading" name="spinner-container"  class="d-flex align-items-center justify-content-center">
+    <div name="spinner" class="spinner-border" role="status">
+    </div>
+  </div>
+  <div v-else class="d-flex flex-column gap-5 gap-md-3 align-items-center">
+      <input type="text" v-if="stack" v-model="stack.name" @input="debounceEditStackName" placeholder="Stack name..." class="form-control input-group">
+      <div v-if="stack?.notecards?.length" class="align-self-center">
+        <scroll
+        :items="notecards" >
+      </scroll>
       </div>
-      <edit-selected-notecard v-else :add_padding="!!stack.notecards.length"   :key="selected_notecard.notecard_id" v-if="selected_notecard" :notecard="selected_notecard"></edit-selected-notecard>
-      <div class="m-5 d-flex flex-column align-self-center">
-        <div 
-        style="min-width:263.5px;"
-        class=" d-flex gap-2  align-items-center align-self-center">
-          <button @click="saveNoteCard" class="button btn btn-primary">Save</button>
-          <span class="text-success">{{ response_message }}</span>
-        </div>
+    <div v-if="!stack?.notecards.length">
+      <h5 class="mb-3 text-center">No notecards. Create some!</h5>
+      <div class="mb-3">
+        <edit-selected-notecard :add_padding="!!stack?.notecards.length" :key="selected_notecard.notecard_id" v-if="selected_notecard" :notecard="selected_notecard"></edit-selected-notecard>
       </div>
     </div>
+    <edit-selected-notecard v-else :add_padding="!!stack.notecards.length"   :key="selected_notecard.notecard_id" v-if="selected_notecard" :notecard="selected_notecard"></edit-selected-notecard>
+    <div class="m-5 d-flex flex-column align-self-center">
+      <div 
+      style="min-width:263.5px;"
+      class=" d-flex gap-2  align-items-center align-self-center">
+        <button @click="saveNoteCard" class="button btn btn-primary">Save</button>
+        <span class="text-success">{{ response_message }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -71,6 +74,19 @@ export default {
           // Assign the fetched stack to the component data
           this.notecards_store.setNotecards(response.data.data.notecards);
           this.stack = response.data.data;
+          if(!this.stack.notecards.length){
+            //If there are no notecards in the stack, default to an empty nc selected for the user to fill out
+            this.selected_notecard_store.setSelectedNotecard(
+                {
+                    front: "",
+                    back: "",
+                    original: {
+                        front: "",
+                        back: "",
+                    }
+                }
+            );
+          }
           this.loading = false;
         })
         .catch(error => {
@@ -90,10 +106,12 @@ export default {
             back: this.selected_notecard.back,
             stack_id: this.$route.params.stack_id
           });
-          this.notecards_store.repsertNotecard(res.data.data)
+          this.notecards_store.repsertNotecard(res.data.data);
+          this.fetchStack();
           this.response_message_store.setResponseMessage(res.data.message);
           
         } catch (error) {
+          console.error(error)
           if (error.response.status >400) {
             this.modal_store.setModal({
               type: 'ERROR',

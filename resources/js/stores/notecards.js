@@ -21,9 +21,6 @@ export const useNotecardsStore = defineStore("notecards", {
             delete notecard.original;
             notecard.original = _.cloneDeep(notecard)
             let i = this.notecards.findIndex(nc => nc.notecard_id === notecard.notecard_id);
-            console.log(notecard, "REPSERTING THIS")
-            console.log(this.notecards, "NCS")
-            console.log(i, "IIII");
             if (i !== -1) {
                 this.notecards[i] = notecard
             } else {

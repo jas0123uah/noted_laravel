@@ -32,7 +32,7 @@ export default {
     data(){
         return {
             options: {
-                debug: 'info',
+                debug: false,
                 modules: {
                     toolbar: [
 

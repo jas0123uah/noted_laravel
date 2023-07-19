@@ -21,11 +21,11 @@
         <div class="row justify-content-center align-items-center center-content">
             <div class="col-md-6 text-center">
                 <div class="d-flex flex-column-reverse flex-md-row justify-content-center align-items-center">
-                    <homepage-notecard
+                    <notecard
                         class="mb-3 mb-md-0 card-lg"
                         :can_be_deleted="{{ json_encode(false) }}"
                         :item="{{ json_encode(['front' => 'JavaScript is statically typed.', ]) }}"
-                    ></homepage-notecard>
+                    ></notecard>
                     <div>
                         <p class="fw-bold text-nowrap">Learn what matters to you</p>
                         <ul style="text-align: justify;">

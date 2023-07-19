@@ -1,5 +1,5 @@
 <template>
-    <WarningModal
+    <modal
     :key="modal.message"
     v-if="modal.message || warning_message" 
     :modal_function="modal.modal_function"
@@ -23,7 +23,7 @@ import { useResponsemessageStore } from '@/stores/response_message'
 import { useModalStore } from '@/stores/modal'
 import { useStacksStore } from '@/stores/stacks'
 import { storeToRefs } from 'pinia'
-import WarningModal from '../components/WarningModal.vue';
+import modal from '../components/Modal.vue';
 import notecard from './Notecard.vue';
 export default {
     props: {

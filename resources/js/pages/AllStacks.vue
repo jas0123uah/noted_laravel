@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex flex-column align-items-center gap-5">
-        <WarningModal
+        <modal
         @eventSuccess="payload => res_message = payload"
         :key="modal.title"
         v-if="modal.title" 

@@ -40,7 +40,7 @@ export default {
       return this.stacks_store.getStacks.find(s => s.stack_id === this.stackId)
     },
     stack_has_notecards(){
-      return this.stack && (this.stack.notecards.length > 1 || this.stack.notecards[0].notecard_id);
+      return this.stack && (this.stack?.notecards?.length > 1 || this?.stack?.notecards?.[0]?.notecard_id);
 
     }
 

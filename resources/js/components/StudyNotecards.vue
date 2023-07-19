@@ -1,5 +1,5 @@
 <template>
-    <WarningModal
+    <modal
     :key="modal.message"
     v-if="modal.message" 
     :modal_function="modal.modal_function"

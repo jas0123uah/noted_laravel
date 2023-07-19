@@ -1,6 +1,6 @@
 <template>
     <div style="height: auto;" class="d-flex flex-column gap-4 align-items-center">
-      <WarningModal
+      <modal
         :key="modal.message"
         v-if="modal.message" 
         :warning_message="modal.message" 

@@ -13,10 +13,28 @@
             <button @click="closeConfirmEmail" type="button" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    Please <strong class="emulate-link" @click="sendEmailVerificationLink">confirm your email address</strong> {{ user.email }} to receive emails with daily review notecards.
-                </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Please <strong class="emulate-link" @click="sendEmailVerificationLink">confirm your email address</strong> {{ user.email }} to receive emails with daily review notecards.
+            </div>
         </div>
+        <div v-else-if="user.is_unsubscribed">
+            <button type="button" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                You are currently not subscribed to receive daily emails with reminders about your review notecards. Please <strong class="emulate-link" @click="subscribe">subscribe</strong>  to receive emails with daily review notecards at {{ user.email }}.
+            </div>
+        </div>
+
+        <div v-else-if="!user.is_unsubscribed && was_unsubscribed">
+            <button type="button" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Subscribed to receive daily emails successfully!
+            </div>
+        </div>
+
     
         <div v-if="display_confirm_email_sent" class="position-relative">
             <button type="button" @click="display_confirm_email_sent= false;" class="close close-button x-button x-color position-relative" data-dismiss="alert" aria-label="Close">
@@ -83,6 +101,7 @@ export default {
             review_notecards: null,
             loading_review: true,
             loading_stacks: true,
+            was_unsubscribed: false,
             
         };
     },
@@ -90,6 +109,7 @@ export default {
         try {
             let stacks = (await window.axios.get('/stacks/')).data;
             let user = (await window.axios.get('/api/users/')).data;
+            this.was_unsubscribed = user.data.is_unsubscribed;
             this.stacks_store.setStacks(stacks.data);
             user.data.show_confirm_email = !user.data.email_verified_at && user.data.show_confirm_email === undefined; 
             this.user_store.setUser(user.data)
@@ -141,6 +161,19 @@ export default {
                 if(res.status === 200) {
                     this.user_store.hideConfirmEmail();
                     this.display_confirm_email_sent = true;
+                }
+            } catch (error) {
+                console.error(error);
+                
+            }
+        },
+        async subscribe(){
+            try {
+                let res = await window.axios.get(`/subscribe/${this.user.subscription_token}`);
+                console.log(res)
+                console.log(res.status)
+                if(res.status === 200) {
+                    this.user_store.updateProp('is_unsubscribed', false);
                 }
             } catch (error) {
                 console.error(error);

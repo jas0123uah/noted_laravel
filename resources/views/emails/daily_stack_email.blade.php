@@ -6,8 +6,12 @@
     <title>Daily Stack Email</title>
 </head>
 <body>
-    <h1>Hello, {{ $data['first_name'] }}</h1>
+    <p>Hello {{ $data['first_name'] }},</p>
+    <p>Your review notecards are ready for {{ $data['today'] }}. Please <a href="{{ $data['login_link'] }}">log in</a> to review them.
+    </p>
+    <p>Thanks, <br>The Noted Team</p>
 
-    <p>Your notecards are ready for {{ $data['today'] }} </p>
+    <p>Want to stop receving emails? Click the link below to unsubscribe.</p>
+    <a href="{{$data['unsubscribe']}}">Unsubscribe</a>
 </body>
 </html>

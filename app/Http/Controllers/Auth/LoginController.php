@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -30,6 +31,7 @@ public function demo(Request $request) {
         'first_name' => 'Demo',
         'last_name' => 'User',
         'password' => bcrypt('password'),
+        'subscription_token' => Str::random(32),
     ]);
 
     // Log in the user

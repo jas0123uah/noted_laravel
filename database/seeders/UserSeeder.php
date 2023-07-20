@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -22,7 +23,7 @@ class UserSeeder extends Seeder
         'email_verified_at' => now()->subDays(10),
         'password' => Hash::make('password'),
         'is_unsubscribed' => false,
-        'subscription_token' => '',
+        'subscription_token' => Str::random(32),
         'remember_token' => '',
         'created_at' => now()->subDays(10),
         'updated_at' => now()->subDays(10),
@@ -34,7 +35,7 @@ class UserSeeder extends Seeder
         'email_verified_at' => now()->subDays(10),
         'password' => Hash::make('password'),
         'is_unsubscribed' => false,
-        'subscription_token' => '',
+        'subscription_token' => Str::random(32),
         'remember_token' => '',
         'created_at' => now()->subDays(10),
         'updated_at' => now()->subDays(10),

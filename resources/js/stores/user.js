@@ -14,6 +14,9 @@ export const useUserStore = defineStore("user", {
         setUser(user) {
             this.user = user;
         },
+        updateProp(k, v) {
+            this.user[k] = v;
+        },
         hideConfirmEmail(){
             this.user.show_confirm_email = false
 

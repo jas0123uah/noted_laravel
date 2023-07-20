@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Reviewnotecard;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use App\Models\User;
 use Mail;
 use App\Mail\NotedMailable;
@@ -53,15 +54,12 @@ class MailController extends Controller
 
         try {
             // Send the daily stack email if appropriate
-            $home = env('HOME');
             $data = [
                 'first_name' => $user->first_name,
                 'today' => now()->format('F jS'),
-                'login_link' => env('LOGIN_LINK'),
-                'unsubscribe' => "{$home}/unsubscribe/{$user->subscription_token}"
+
             ];
-            if(env('APP_ENV') === 'local'){
-                Mail::to('jspencer5396@gmail.com')->send(new NotedMailable($data));
+            if(config('app.env') === 'testing'){
                 Log::info("Not sending daily stack email to {$example_notecard->email} in testing environment.");
             }
             else{

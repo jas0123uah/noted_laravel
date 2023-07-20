@@ -25,7 +25,7 @@ class NotecardsController extends Controller
             'stack_id' => $validated_data["stack_id"],
             'user_id' => Auth::id(),
             'repetition' => 0,
-            'next_repetition' => now() ->addDays(1)->startOfDay()
+            'next_repetition' => now()->addDays(1)->startOfDay()
         ]);
 
         return response()->json([

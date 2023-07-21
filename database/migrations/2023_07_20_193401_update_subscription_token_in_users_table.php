@@ -17,7 +17,7 @@ class UpdateSubscriptionTokenInUsersTable extends Migration
         $users = \DB::table('users')->get();
         foreach ($users as $user) {
             \DB::table('users')
-                ->where('user_id', $user->id)
+                ->where('user_id', $user->user_id)
                 ->update(['subscription_token' => Str::random(32)]);
         }
     }

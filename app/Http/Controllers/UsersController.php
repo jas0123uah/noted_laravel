@@ -19,21 +19,6 @@ class UsersController extends Controller
         return redirect()->action([UsersController::class, 'show'], ['user' => Auth::id()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -49,14 +34,6 @@ class UsersController extends Controller
         return response()->json([
             'data' => $user
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**

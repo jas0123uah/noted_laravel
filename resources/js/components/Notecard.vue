@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex flex-column">
         <div :key="item.id" @click="selected_notecard_store.setSelectedNotecard(item)" class="card bg-white" style="width: 18rem; height: 9rem; display: flex; position: static; align-items: center;">
-            <i v-if="can_be_deleted" @click="confirmDelete(item)" class="fa-solid fa-circle-minus" style="margin-top: 0.25rem; margin-right: 0.5rem; align-self: baseline;"></i>
+            <i v-if="can_be_deleted" @click="confirmDelete(item)" class="fa-solid fa-circle-minus hover-pointer" style="margin-top: 0.25rem; margin-right: 0.5rem; align-self: baseline;"></i>
             <div class=" justify-content-center card-body d-flex align-items-center" style="margin-bottom: 14.4px;">
                 <h5 v-html="notecard_text" class="card-title roboto fw-bold"></h5>
             </div>
@@ -19,6 +19,13 @@ import { useStacksStore } from '@/stores/stacks'
 import { useResponsemessageStore } from '@/stores/response_message'
 import { useSelectednotecardStore } from '@/stores/selected_notecard'
 import { storeToRefs } from 'pinia'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/default.css'; // Import the desired code highlighting style
+import 'highlight.js/styles/monokai-sublime.css'
+
+hljs.configure({   // optionally configure hljs
+    languages: ['javascript', 'ruby', 'python']
+});
 export default {
     props: {
         item: {

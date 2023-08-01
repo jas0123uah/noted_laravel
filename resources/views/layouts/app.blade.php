@@ -89,13 +89,13 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{ route('about') }}">{{ __('About') }}</a>
+                                <a class="nav-link text-white hover-underline-animation" href="{{ route('about') }}">{{ __('About') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link text-white hover-underline-animation" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             <li class="nav-item">
-                                <span id="demo-link" class="nav-link text-white" href="#">{{ __('Demo') }}</span>
+                                <span id="demo-link" class="nav-link text-white hover-pointer hover-underline-animation" href="#">{{ __('Demo') }}</span>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn button text-white" style="padding: 0.375rem 0.75rem;" href="{{ route('register') }}">{{ __('Sign Up') }}</a>

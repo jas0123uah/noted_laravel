@@ -1,5 +1,5 @@
 # Noted
-[Livesite](http://161.35.62.164/)
+[Livesite](http://noted-js.co/)
 
 This project is a notecard app I refer to as Noted. It utilizes the [Supermemo2 algorithm](https://super-memory.com/english/ol/sm2.htm) to inform users of notecards they need to review. I created a notecard app specifically because I would like to have a tool to facilitate my learning as a developer. I created to serve as my introduction to a variety of technologies including:
 

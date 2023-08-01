@@ -7,7 +7,7 @@
     :title="modal.type || 'WARNING'" />
     <div name="scroll" style="max-width: 30em; overflow-x: scroll; white-space: nowrap;"  class="d-flex align-items-center" :class="{'flex-column':!items.length, 'gap-3': !items.length, 'gap-5': items.length}" ref="scrollContainer">
         <span v-if="!items.length"> No {{ is_stack ? 'Stacks' : 'Notecards' }}. Create one!</span>
-        <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus"></i>
+        <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus hover-pointer"></i>
         <template v-if="is_stack">
             <notecard v-for="(item) in items" :stack_title="item.name" style="flex-shrink: 0;" @click="selectNotecard(item);" :item="item"></notecard>
         </template>

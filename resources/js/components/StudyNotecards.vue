@@ -13,18 +13,18 @@
     
   <div class="study-wrapper">
     <div @click="toggleNotecard"  class="notecard-container">
-      <transition name="notecard-transition">
-        <div class="notecard position-relative" :key="current_card_index">
-          <div class="notecard-inner">
-            <div :key="`${current_card_index}-front`" v-if="show_front" class="notecard-content hide-toolbar">
-              <quill-editor v-model:content="current_card.front"  :readOnly="true" contentType="html" theme="snow" />
+      <div class="notecard position-relative" :key="current_card_index">
+        <div class="notecard-inner">
+          <transition>
+            <div :class="{'position-absolute': !show_front || in_transition}" :key="`${current_card_index}-front`" v-if="show_front" class="notecard-content hide-toolbar w-100">
+                <quill-editor :syntax-highlight="customSyntaxHighlight" v-model:content="current_card.front"  :readOnly="true" contentType="html" theme="snow" />
             </div>
-            <div v-else class="notecard-content hide-toolbar">
-              <quill-editor :key="`${current_card_index}-back`" v-model:content="current_card.back"  :readOnly="true" contentType="html" theme="snow" />
+            <div v-else :class="{'position-absolute': show_front || in_transition}" class=" w-100 notecard-content hide-toolbar">
+              <quill-editor :syntax-highlight="customSyntaxHighlight" :key="`${current_card_index}-back`" v-model:content="current_card.back"  :readOnly="true" contentType="html" theme="snow" />
             </div>
+          </transition>
           </div>
         </div>
-      </transition>
     </div>
     <span :class="{'invisible': !show_message}" class="mb-3">Tap or click the notecard to see the {{ show_front ? 'back' : 'front' }}. </span> 
     <template v-if="$route.params.stack_id === 'daily-stack' && new Date(this.notecards[current_card_index]?.next_repetition) < new Date(start_of_day)">
@@ -40,6 +40,13 @@
 
 <script>
 import { useModalStore } from '@/stores/modal'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/default.css'; // Import the desired code highlighting style
+import 'highlight.js/styles/monokai-sublime.css'
+
+hljs.configure({   // optionally configure hljs
+    languages: ['javascript', 'ruby', 'python']
+});
 
 export default {
   props: {
@@ -54,6 +61,7 @@ export default {
       show_front: true,
       loading: false,
       has_seen_back: false,
+      has_flipped_back_to_front: false,
       modal_store: useModalStore(),
       study_button_defs:`<ul style="list-style-type:none; padding:0; margin:0;">
         <li>😵‍💫 - Blackout. Complete failure to recall the information.</li>
@@ -78,11 +86,15 @@ export default {
       return new Date(today);
     },
     show_message(){
-      return !(this.has_seen_back && this.show_front)
+      return (this.show_front && !this.has_seen_back) || (!this.show_front && !this.has_flipped_back_to_front)
 
     }
   },
   methods: {
+    customSyntaxHighlight(code, lang) {
+            const highlightedCode = hljs.highlight(lang, code).value;
+            return highlightedCode;
+    },
     getPrevious() {
       if (this.current_card_index > 0) {
         this.current_card_index--;
@@ -100,8 +112,13 @@ export default {
       this.show_front = true;
     },
     toggleNotecard() {
-      this.show_front = !this.show_front;
-      if(!this.show_front) this.has_seen_back = true;
+      this.in_transition = true;
+      setTimeout(() => {
+        this.show_front = !this.show_front;
+        if(!this.show_front) this.has_seen_back = true;
+        if(this.show_front) this.has_flipped_back_to_front = true;
+      }, 350); // match transition duration
+  }
     },
     displayDefs(){
         this.modal_store.setModal({
@@ -110,7 +127,6 @@ export default {
         })
 
       }
-  },
 };
 </script>
 
@@ -151,7 +167,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease-in-out;
 }
 
 .notecard-content {
@@ -171,5 +186,15 @@ button {
   border: none;
   background-color: #ccc;
   cursor: pointer;
+}
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

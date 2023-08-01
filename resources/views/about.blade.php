@@ -22,7 +22,7 @@
         <div class="col-md-6 text-center">
             <img class="img-fluid rounded-circle" style="max-width: 200px; height: auto;" src="{{ asset('images/profile_picture.png') }}" alt="Profile Picture">
             <p style="text-align: justify;  margin: 1em;">
-                Hi, I'm Jay! I built this application as a personal project to help myself learn concepts in web development. (or any subject), via spaced repetition. Each day, a daily stack of review notecards is emailed to my inbox, composed of notecards I need to study the most according to the Supermemo2 algorithm.
+                Hi, I'm Jay! I built this application as a personal project to help myself learn concepts in web development. (or any subject), via spaced repetition. Each day, a daily stack of review notecards is emailed to my inbox, composed of notecards I need to study the most according to the <a class="text-black" target="_blank" href="https://super-memory.com/english/ol/sm2.htm">Supermemo2 algorithm</a>.
                 <br>
                 Feel free to create an account to demo how this project works! I'd love to hear from you!
             </p>

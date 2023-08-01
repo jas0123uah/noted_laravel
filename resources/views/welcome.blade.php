@@ -11,6 +11,25 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     @vite(['resources/js/app.js', 'resources/css/app.css'])
+    <!-- Import jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module">
+        $(document).ready(function() {
+        let is_front_visible = true;
+        setInterval(() => {
+            if (is_front_visible) {
+                $('.front-notecard').fadeOut(1000, function() {
+                    $('.back-notecard').fadeIn(1000);
+                });
+            } else {
+                $('.back-notecard').fadeOut(1000, function() {
+                    $('.front-notecard').fadeIn(1000);
+                });
+            }
+            is_front_visible = !is_front_visible;
+        }, 5000);
+    })
+    </script>
 
 
     <!-- Styles -->
@@ -20,13 +39,24 @@
     <div class="container">
         <div class="row justify-content-center align-items-center center-content">
             <div class="col-md-6 text-center">
-                <div class="d-flex flex-column-reverse flex-md-row justify-content-center align-items-center">
-                    <notecard
-                        class="mb-3 mb-md-0 card-lg"
-                        :can_be_deleted="{{ json_encode(false) }}"
-                        :allow_truncate="false"
-                        :item="{{ json_encode(['front' => 'JavaScript is statically typed.', ]) }}"
-                    ></notecard>
+                <div class="d-flex position-relative flex-column-reverse flex-md-row justify-content-center align-items-center">
+                    <div class="front-notecard">
+                        <notecard
+                                class="mb-3 mb-md-0 card-lg"
+                                :can_be_deleted="{{ json_encode(false) }}"
+                                :allow_truncate="false"
+                                :item="{{ json_encode(['front' => 'True or False: JavaScript is statically typed.', ]) }}"
+                        ></notecard>
+                    </div>
+                    <div class="back-notecard" style="display:none;">
+                        <notecard
+                                class="mb-3 mb-md-0 card-lg"
+                                :can_be_deleted="{{ json_encode(false) }}"
+                                :allow_truncate="false"
+                                :item="{{ json_encode(['front' => 'False - JavaScript is dynamically typed.', ]) }}"
+                        ></notecard>
+                    </div>
+                    
                     <div>
                         <p class="fw-bold text-nowrap">Learn what matters to you</p>
                         <ul style="text-align: justify;">

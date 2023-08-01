@@ -14,7 +14,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                Please <strong class="emulate-link" @click="sendEmailVerificationLink">confirm your email address</strong> {{ user.email }} to receive emails with daily review notecards.
+                A confirmation email should be in your inbox from a sender named Noted. Please confirm your email address: {{ user.email }}, to receive emails with daily review notecards.<br><br> Don't see an email? <strong class="emulate-link" @click="sendEmailVerificationLink">Resend verification email</strong>.
             </div>
         </div>
         <div v-else-if="user.is_unsubscribed">
@@ -62,7 +62,7 @@
         </div>
         <div class="d-flex flex-column align-items-center" v-else-if="review_notecards?.length">
             <div class="d-flex gap-5">
-                <i v-if="stacks?.length<=1" style="line-height: normal; visibility: hidden;" class="fa-solid fa-2xl fa-circle-plus"></i>
+                <i v-if="stacks?.length<=1" style="line-height: normal; visibility: hidden;" class="fa-solid fa-2xl fa-circle-plus hover-pointer"></i>
                 <div>
                     <h5>Review notecards for {{ review_stack_date }} </h5>
                     <div class="d-flex gap-5">

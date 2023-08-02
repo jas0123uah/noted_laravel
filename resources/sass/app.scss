@@ -78,11 +78,20 @@
     background: transparent;
     border: 0;
 }
+.welcome-x {
+    left: 91%;
+}
 .x-color{
   color: #664d03;
 }
 .invisible{
   visibility: none;
+}
+.welcome-message-container{
+  position: relative;
+  margin: 0 auto;
+  bottom: 2em;
+  width: fit-content;
 }
 
 @media (min-width: 992px) {

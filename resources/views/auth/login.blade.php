@@ -5,6 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card border-0">
+                <!-- <div class="card-header">{{ __('Login') }}</div> -->
 
                 <div class="card-body">
                     <p class="text-center">Learn something today.</p>
@@ -38,7 +39,7 @@
     <div class="row mb-3">
         <div class="col-md-6 offset-md-3"> <!-- Modified: Added 'offset-md-3' class -->
             <div class="form-check">
-                <input class="form-check-input bg-white" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                 <label class="form-check-label" for="remember">
                     {{ __('Remember Me') }}

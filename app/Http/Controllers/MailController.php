@@ -58,6 +58,7 @@ class MailController extends Controller
                 'login_link' => env('LOGIN_LINK'),
                 'first_name' => $user->first_name,
                 'today' => now()->format('F jS'),
+                'unsubscribe' => "http://noted-js.co/unsubscribe/{$user->subscription_token}"
 
             ];
             if(config('app.env') === 'testing'){

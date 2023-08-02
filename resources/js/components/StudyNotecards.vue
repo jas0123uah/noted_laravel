@@ -60,6 +60,7 @@ export default {
       current_card_index: 0,
       show_front: true,
       loading: false,
+      in_transition: false,
       has_seen_back: false,
       has_flipped_back_to_front: false,
       modal_store: useModalStore(),
@@ -119,14 +120,14 @@ export default {
         if(this.show_front) this.has_flipped_back_to_front = true;
       }, 350); // match transition duration
   }
-    },
+    ,
     displayDefs(){
         this.modal_store.setModal({
           type: 'INFO',
           message: this.study_button_defs
         })
-
       }
+    }
 };
 </script>
 

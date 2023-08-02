@@ -55,6 +55,7 @@ class MailController extends Controller
         try {
             // Send the daily stack email if appropriate
             $data = [
+                'login_link' => env('LOGIN_LINK'),
                 'first_name' => $user->first_name,
                 'today' => now()->format('F jS'),
 

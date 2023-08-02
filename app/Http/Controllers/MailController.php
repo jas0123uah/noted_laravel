@@ -14,6 +14,7 @@ class MailController extends Controller
     public function index()
 {
 
+    Reviewnotecard::where('created_at', '<', now()->startOfDay())->delete();
 
     // Retrieve the notecards for the daily stack
     $notecards = Notecard::getItemsForReview();

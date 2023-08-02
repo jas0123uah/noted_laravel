@@ -28,6 +28,13 @@
             }
             is_front_visible = !is_front_visible;
         }, 5000);
+        
+        const message_button = document.getElementById('message-button');
+        message_button?.addEventListener('click', function(){
+            const message_container = document.getElementById('message-container');
+            message_container.style.display = 'none';
+            console.log(message_container, "Message ")
+        })
     })
     </script>
 
@@ -37,6 +44,17 @@
 </head>
 <div id="app">
     <div class="container">
+        @if(isset($message))
+        <div id="message-container" class="align-self-center welcome-message-container">
+            <button id="message-button" @click="$message=null" type="button" class="close position-relative x-button x-color welcome-x" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ $message }}
+            </div>
+        </div>
+
+        @endif
         <div class="row justify-content-center align-items-center center-content">
             <div class="col-md-6 text-center">
                 <div class="d-flex position-relative flex-column-reverse flex-md-row justify-content-center align-items-center">

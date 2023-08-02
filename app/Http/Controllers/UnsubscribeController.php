@@ -19,10 +19,9 @@ class UnsubscribeController extends Controller
             $user->subscription_token = Str::random(32);
             $user->save();
 
-            return response()->json([
-                'message' => 'Unsubscribed successfully!',
-                'user' => $user   
-            ]);
+            return view('welcome')->with(
+                ['message' => 'Unsubscribed from daily emails successfully!']
+            );
         } else {
         return response()->json([
             'message' => 'Invalid token. Please log into your account and unsubscribe through your account page.',

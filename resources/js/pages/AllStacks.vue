@@ -27,7 +27,7 @@
         </div>
 
         <div v-else-if="!user.is_unsubscribed && was_unsubscribed">
-            <button type="button" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
+            <button type="button" @click="was_unsubscribed=false" class="close position-relative x-button x-color" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

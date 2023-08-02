@@ -5,9 +5,8 @@
     :modal_function="modal.modal_function"
     :warning_message="modal.message" 
     :title="modal.type" />
-    <div v-if="loading" class="d-flex justify-content-center">
+    <div v-if="loading" name="loader" class="d-flex justify-content-center">
       <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
       </div>
     </div>
     
@@ -28,10 +27,12 @@
     </div>
     <span :class="{'invisible': !show_message}" class="mb-3">Tap or click the notecard to see the {{ show_front ? 'back' : 'front' }}. </span> 
     <template v-if="$route.params.stack_id === 'daily-stack' && new Date(this.notecards[current_card_index]?.next_repetition) < new Date(start_of_day)">
-        <study-buttons @click="loading = true" :disabled="loading" @getNextCard="payload => {getNext(); loading = false;}" :notecard_id="this.notecards[current_card_index]?.notecard_id"></study-buttons>
+      <div @click="loading=true;">
+        <study-buttons :disabled="loading" @getNextCard="payload => {getNext();}" :notecard_id="this.notecards[current_card_index]?.notecard_id"></study-buttons>
+      </div>  
         <span @click="displayDefs" class="align-self-start emulate-link fw-bold">Definitions</span>
     </template>
-    <div class="swipe-controls">
+    <div v-if="notecards.length>1" class="swipe-controls">
       <button @click="getPrevious" class="btn button">&lt;</button>
       <button @click="getNext" class="btn button">&gt;</button>
     </div>
@@ -111,6 +112,9 @@ export default {
         this.current_card_index = 0;
       }
       this.show_front = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, 350); 
     },
     toggleNotecard() {
       this.in_transition = true;

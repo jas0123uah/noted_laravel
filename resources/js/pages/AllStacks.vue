@@ -203,7 +203,7 @@ export default {
         },
         display_res_message(){
             return this.response_message && !_.isEmpty(this.response_message)
-        }
+        },
         user() {
             return this.user_store.getUser;
         },

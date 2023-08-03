@@ -5,7 +5,6 @@ use App\Models\Notecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class NotecardsController extends Controller
 {
     /**
@@ -18,14 +17,16 @@ class NotecardsController extends Controller
             'back' => 'required',
             'stack_id' => 'required'
         ]);
-        
+
+        $user_timezone = $request->header('UserTimezone');
+            
         $notecard = Notecard::create([
             'front' => $validated_data["front"],
             'back' => $validated_data["back"],
             'stack_id' => $validated_data["stack_id"],
             'user_id' => Auth::id(),
             'repetition' => 0,
-            'next_repetition' => now()->addDays(1)->startOfDay()
+            'next_repetition' => now($user_timezone)->addDays(1)->startOfDay()->setTimezone('UTC')->format('Y-m-d H:i:s'),
         ]);
 
         return response()->json([
@@ -65,6 +66,10 @@ class NotecardsController extends Controller
 
             // Update the E-Factor based on the provided quality
             $notecard->updateEFactor($quality);
+
+            //Get the user's timezone from the request so we can set the next to be at midnight as per their tz. All next_reps are stored in UTC in the DB
+            $user_timezone = $request->header('UserTimezone');
+            $notecard->setUserTimezone($user_timezone); 
 
             // Restart repetitions or Calculate the next repetition
             $quality < 3 ? $notecard->restartRepetitions() : $notecard->calculateNextRepetition();

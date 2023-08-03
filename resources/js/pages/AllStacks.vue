@@ -102,7 +102,7 @@
             <scroll v-if="stacks" :is_stack="true" :items="stacks"> </scroll>
         </div>
 
-        <p v-if="response_message" class="text-success m-2 text-center">
+        <p v-if="response_message && !_.isEmpty(response_message)" class="text-success m-2 text-center">
             {{ response_message }}
         </p>
         <div v-if="loading_review" class="spinner-border" role="status"></div>

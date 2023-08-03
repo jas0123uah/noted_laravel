@@ -20,6 +20,15 @@ axios.interceptors.request.use(function(config){
 
 
 })
+//This will be used in calculating next_repetition times
+axios.interceptors.request.use(function (config) {
+    // Get timezone from browser
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    config.headers.UserTimezone = userTimezone;
+
+    return config;
+});
 window.axios = axios;
 
 

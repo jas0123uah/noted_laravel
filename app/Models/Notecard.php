@@ -10,6 +10,12 @@ class Notecard extends Model
 {
     use HasFactory;
 
+    private $user_timezone;
+
+    public function setUserTimezone($timezone) {
+        $this->user_timezone = $timezone;
+    }
+
     /**
      * Get the primary key column name.
      *
@@ -37,9 +43,9 @@ class Notecard extends Model
         if ($this->repetition == 1) {
             $this->next_repetition = now()->addDays(6)->startOfDay();
         } else if($this->repetition > 1) {
-            $next_repetition_date = Carbon::parse($this->next_repetition);
+            $next_repetition_date = Carbon::parse($this->next_repetition)->setTimezone($this->user_timezone);
             $interval = $next_repetition_date->diffInDays();
-            $this->next_repetition = $next_repetition_date->addDays($interval * $this->e_factor)->startOfDay();
+            $this->next_repetition = $next_repetition_date->addDays($interval * $this->e_factor)->startOfDay()->setTimezone('UTC');
         }
     }
 
@@ -55,7 +61,7 @@ class Notecard extends Model
     public function restartRepetitions()
     {
         $this->repetition = 0;
-        $this->next_repetition = now()->addDay()->startOfDay();
+        $this->next_repetition = now($this->user_timezone)->addDay()->startOfDay()->setTimezone('UTC');
     }
 
     
@@ -85,5 +91,6 @@ class Notecard extends Model
         'back',
         'e_factor',
         'repetition',
+        'next_repetition'
     ];
 }

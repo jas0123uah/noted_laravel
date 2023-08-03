@@ -58,11 +58,7 @@
             {{ show_front ? "back" : "front" }}.
         </span>
         <template
-            v-if="
-                $route.params.stack_id === 'daily-stack' &&
-                new Date(this.notecards[current_card_index]?.next_repetition) <=
-                    new Date(start_of_day)
-            "
+            v-if="show_study_buttons"
         >
             <div @click="loading = true">
                 <study-buttons
@@ -91,6 +87,7 @@
 </template>
 
 <script>
+import {DateTime} from 'luxon';
 import { useModalStore } from "@/stores/modal";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css"; // Import the desired code highlighting style
@@ -145,6 +142,14 @@ export default {
                 (!this.show_front && !this.has_flipped_back_to_front)
             );
         },
+        show_study_buttons(){
+          if(this.notecards[this.current_card_index]?.next_repetition){
+            let next_rep_in_utc = DateTime.fromFormat(this.notecards[this.current_card_index]?.next_repetition, 'yyyy-MM-dd HH:mm:ss').setZone("UTC",{ keepLocalTime: true } );
+            return this.$route.params.stack_id === 'daily-stack' &&
+                  next_rep_in_utc <=
+                      DateTime.now().startOf('day')
+          }
+        }
     },
     methods: {
         customSyntaxHighlight(code, lang) {

@@ -60,7 +60,7 @@
         <template
             v-if="
                 $route.params.stack_id === 'daily-stack' &&
-                new Date(this.notecards[current_card_index]?.next_repetition) <
+                new Date(this.notecards[current_card_index]?.next_repetition) <=
                     new Date(start_of_day)
             "
         >

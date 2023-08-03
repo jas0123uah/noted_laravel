@@ -1,10 +1,10 @@
 <template>
     <modal
     :key="modal.message"
-    v-if="modal.message || warning_message" 
+    v-if="modal.message" 
     :modal_function="modal.modal_function"
-    :warning_message="modal.message || warning_message" 
-    :title="modal.type || 'WARNING'" />
+    :warning_message="modal.message" 
+    :title="modal.type" />
     <div name="scroll" style="max-width: 30em; overflow-x: scroll; white-space: nowrap;"  class="d-flex align-items-center" :class="{'flex-column':!items.length, 'gap-3': !items.length, 'gap-5': items.length}" ref="scrollContainer">
         <span v-if="!items.length"> No {{ is_stack ? 'Stacks' : 'Notecards' }}. Create one!</span>
         <i style="line-height: normal;" @click="is_stack ? addStackModal() : addNotecard();" class="fa-solid fa-2xl fa-circle-plus hover-pointer"></i>
@@ -42,7 +42,6 @@ export default {
             response_message_store: useResponsemessageStore(),
             modal_store: useModalStore(),
             stack_store: useStacksStore(),
-            warning_message: null,
             new_stack_name: ''
         };
     },
@@ -51,7 +50,6 @@ export default {
     computed: {
         unsaved_changes() {
             if(this.selected_notecard_store){
-
                 let selected_notecard = this.selected_notecard_store.getSelectedNotecard;
                 return selected_notecard && !_.isEqual(_.omit(selected_notecard, 'original'), _.cloneDeep(selected_notecard.original));
             }
@@ -71,9 +69,15 @@ export default {
         
     },
     methods: {
+        showWarning(){
+            this.modal_store.setModal({
+                type: 'WARNING',
+                message: 'You have unsaved notecard changes. Please save before proceeding.',
+            });
+        },
         addNotecard(){
             if(this.unsaved_changes){
-                this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
+                this.showWarning();
                 return
             }
             this.selected_notecard_store.setSelectedNotecard(
@@ -89,7 +93,7 @@ export default {
         },
         selectNotecard(notecard){
             if((this.selected_notecard?.notecard_id !== notecard.notecard_id) && this.unsaved_changes){
-                this.warning_message = "You have unsaved notecard changes. Please save before proceeding.";
+                this.showWarning();
                 return
             }
             this.selected_notecard_store.setSelectedNotecard(notecard);
@@ -116,8 +120,7 @@ export default {
                         ${Object.values(error.response.data.errors).map(e => `<li>${e}</li>`).join('')}   
                         </ul>
                     `
-                    });
-                
+                    });   
                 }
             }
         }

@@ -102,7 +102,7 @@
             <scroll v-if="stacks" :is_stack="true" :items="stacks"> </scroll>
         </div>
 
-        <p v-if="response_message && !_.isEmpty(response_message)" class="text-success m-2 text-center">
+        <p v-if="display_res_message" class="text-success m-2 text-center">
             {{ response_message }}
         </p>
         <div v-if="loading_review" class="spinner-border" role="status"></div>
@@ -201,6 +201,9 @@ export default {
         modal() {
             return this.modal_store.getModal;
         },
+        display_res_message(){
+            return this.response_message && !_.isEmpty(this.response_message)
+        }
         user() {
             return this.user_store.getUser;
         },
